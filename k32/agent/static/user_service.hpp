@@ -44,7 +44,8 @@ class User_Service
 
     // Removes an HTTP handler for requests from users.
     bool
-    remove_http_handler(const phcow_string& path) noexcept;
+    remove_http_handler(const phcow_string& path)
+      noexcept;
 
     // This callback is invoked when a WebSocket connection is established from
     // a client. `request_raw_query` is the query string in the request URI.
@@ -67,7 +68,8 @@ class User_Service
 
     // Removes a WebSocket authentication handler for requests from users.
     bool
-    remove_ws_authenticator(const phcow_string& path) noexcept;
+    remove_ws_authenticator(const phcow_string& path)
+      noexcept;
 
     // This callback is invoked when a WebSocket (text or binary) message is
     // received from a client.
@@ -91,15 +93,18 @@ class User_Service
 
     // Removes a WebSocket handler for requests from users.
     bool
-    remove_ws_handler(const phcow_string& opcode) noexcept;
+    remove_ws_handler(const phcow_string& opcode)
+      noexcept;
 
     // Gets all online users.
     const cow_dictionary<User_Record>&
-    all_user_records() const noexcept;
+    all_user_records()
+      const noexcept;
 
     // Gets properties of a user.
     const User_Record&
-    find_user_record_opt(const phcow_string& username) const noexcept;
+    find_user_record_opt(const phcow_string& username)
+      const noexcept;
 
     // Reloads configuration.
     void

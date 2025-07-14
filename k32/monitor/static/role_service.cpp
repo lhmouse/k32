@@ -567,7 +567,8 @@ Role_Service::
 
 const cow_int64_dictionary<Role_Record>&
 Role_Service::
-all_role_records() const noexcept
+all_role_records()
+  const noexcept
   {
     if(!this->m_impl)
       return empty_role_record_map;
@@ -577,7 +578,8 @@ all_role_records() const noexcept
 
 const Role_Record&
 Role_Service::
-find_role_record_opt(int64_t roid) const noexcept
+find_role_record_opt(int64_t roid)
+  const noexcept
   {
     if(!this->m_impl)
       return Role_Record::null;

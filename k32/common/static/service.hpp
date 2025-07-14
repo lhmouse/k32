@@ -45,47 +45,56 @@ class Service
 
     // Removes a handler for requests from other servers.
     bool
-    remove_handler(const phcow_string& opcode) noexcept;
+    remove_handler(const phcow_string& opcode)
+      noexcept;
 
     // Returns the UUID of the active service. If service is not active, a nil
     // UUID is returned.
     const ::poseidon::UUID&
-    service_uuid() const noexcept;
+    service_uuid()
+      const noexcept;
 
     // Returns the 0-based index of the active service. This value is unique in
     // all instances sharing the same configuration file. If there is no active
     // service, -1 is returned.
     int
-    service_index() const noexcept;
+    service_index()
+      const noexcept;
 
     // Returns the application name of the active service. If there is no active
     // service, an empty string is returned.
     const cow_string&
-    application_name() const noexcept;
+    application_name()
+      const noexcept;
 
     // Gets the pre-configured zone ID of this service. This identifies services
     // that belong in the same zone within the same application. If no service is
     // running, zero is returned.
     int
-    zone_id() const noexcept;
+    zone_id()
+      const noexcept;
 
     // Gets the pre-configured start time of this zone. If no service is running,
     // '1970-01-01 00:00:00 UTC' is returned.
     system_time
-    zone_start_time() const noexcept;
+    zone_start_time()
+      const noexcept;
 
     // Returns the type of the active service. If there is no active service, an
     // empty string is returned.
     const cow_string&
-    service_type() const noexcept;
+    service_type()
+      const noexcept;
 
     // Gets all service records, cached from Redis.
     const cow_uuid_dictionary<Service_Record>&
-    all_service_records() const noexcept;
+    all_service_records()
+      const noexcept;
 
     // Gets properties of a remote service.
     const Service_Record&
-    find_service_record_opt(const ::poseidon::UUID& remote_service_uuid) const noexcept;
+    find_service_record_opt(const ::poseidon::UUID& remote_service_uuid)
+      const noexcept;
 
     // Reloads configuration. If `application_name` or `application_password`
     // is changed, a new service (with a new UUID) is initiated.

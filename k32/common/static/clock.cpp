@@ -18,7 +18,8 @@ Clock::
 
 void
 Clock::
-set_virtual_offset(seconds secs) noexcept
+set_virtual_offset(seconds secs)
+  noexcept
   {
     this->m_offset = secs;
     POSEIDON_LOG_INFO(("Clock virtual offset has been set to $1"), this->m_offset);
@@ -26,7 +27,8 @@ set_virtual_offset(seconds secs) noexcept
 
 ::time_t
 Clock::
-get_time_t() const noexcept
+get_time_t()
+  const noexcept
   {
     struct timespec ts;
     ::clock_gettime(CLOCK_REALTIME, &ts);
@@ -35,7 +37,8 @@ get_time_t() const noexcept
 
 double
 Clock::
-get_double_time_t() const noexcept
+get_double_time_t()
+  const noexcept
   {
     struct timespec ts;
     ::clock_gettime(CLOCK_REALTIME, &ts);
@@ -45,7 +48,8 @@ get_double_time_t() const noexcept
 
 system_time
 Clock::
-get_system_time() const noexcept
+get_system_time()
+  const noexcept
   {
     struct timespec ts;
     ::clock_gettime(CLOCK_REALTIME, &ts);
@@ -55,7 +59,8 @@ get_system_time() const noexcept
 
 Clock_Fields
 Clock::
-get_system_time_fields() const noexcept
+get_system_time_fields()
+  const noexcept
   {
     struct timespec ts;
     ::clock_gettime(CLOCK_REALTIME, &ts);

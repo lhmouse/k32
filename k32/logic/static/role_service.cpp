@@ -455,7 +455,8 @@ set_handler(const phcow_string& opcode, const handler_type& handler)
 
 bool
 Role_Service::
-remove_handler(const phcow_string& opcode) noexcept
+remove_handler(const phcow_string& opcode)
+  noexcept
   {
     if(!this->m_impl)
       return false;
@@ -465,7 +466,8 @@ remove_handler(const phcow_string& opcode) noexcept
 
 shptr<Role>
 Role_Service::
-find_online_role_opt(int64_t roid) const noexcept
+find_online_role_opt(int64_t roid)
+  const noexcept
   {
     if(!this->m_impl)
       return nullptr;

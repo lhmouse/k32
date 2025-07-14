@@ -25,24 +25,30 @@ class Clock
     // The virtual clock offset is the number of seconds from the physical time
     // of the current system to the virtual time of this process.
     seconds
-    virtual_offset() const noexcept
+    virtual_offset()
+      const noexcept
       { return this->m_offset;  }
 
     void
-    set_virtual_offset(seconds secs) noexcept;
+    set_virtual_offset(seconds secs)
+      noexcept;
 
     // These functions obtain the current virtual time.
     ::time_t
-    get_time_t() const noexcept;
+    get_time_t()
+      const noexcept;
 
     double
-    get_double_time_t() const noexcept;
+    get_double_time_t()
+      const noexcept;
 
     system_time
-    get_system_time() const noexcept;
+    get_system_time()
+      const noexcept;
 
     Clock_Fields
-    get_system_time_fields() const noexcept;
+    get_system_time_fields()
+      const noexcept;
   };
 
 }  // namespace k32

@@ -29,11 +29,12 @@ class Service_Future
   private:
     virtual
     void
-    do_on_abstract_future_initialize() override;
+    do_on_abstract_future_initialize()
+      override;
 
   public:
 #ifdef K32_FRIENDS_5B7AEF1F_484C_11F0_A2E3_5254005015D2_
-    cow_vector<Service_Response>& mf_responses() noexcept { return this->m_responses;  }
+    cow_vector<Service_Response>& mf_responses() { return this->m_responses;  }
     void mf_abstract_future_complete() { this->do_abstract_future_initialize_once();  }
 #endif
     Service_Future(const Service_Future&) = delete;
@@ -42,19 +43,22 @@ class Service_Future
 
     // Gets the request opcode. This field is set by the constructor.
     const cow_string&
-    opcode() const noexcept
+    opcode()
+      const noexcept
       { return this->m_opcode;  }
 
     // Gets the request data. This field is set by the constructor.
     const ::taxon::V_object&
-    request() const noexcept
+    request()
+      const noexcept
       { return this->m_request;  }
 
     // Gets a vector of all target services with their responses, after all
     // operations have completed successfully. If `successful()` yields `false`,
     // an exception is thrown, and there is no effect.
     const cow_vector<Service_Response>&
-    responses() const
+    responses()
+      const
       {
         this->check_success();
         return this->m_responses;
@@ -63,7 +67,8 @@ class Service_Future
     // Gets the number of target services. If `successful()` yields `false`, an
     // exception is thrown, and there is no effect.
     size_t
-    response_count() const
+    response_count()
+      const
       {
         this->check_success();
         return this->m_responses.size();
@@ -72,7 +77,8 @@ class Service_Future
     // Gets the response of a target service. If `successful()` yields `false`,
     // an exception is thrown, and there is no effect.
     const Service_Response&
-    response(size_t index) const
+    response(size_t index)
+      const
       {
         this->check_success();
         return this->m_responses.at(index);

@@ -133,7 +133,8 @@ struct Local_Request_Fiber final : ::poseidon::Abstract_Fiber
 
     virtual
     void
-    do_on_abstract_fiber_execute() override
+    do_on_abstract_fiber_execute()
+      override
       {
         const auto impl = this->m_weak_impl.lock();
         if(!impl)
@@ -259,7 +260,8 @@ struct Remote_Response_Task final : ::poseidon::Abstract_Task
 
     virtual
     void
-    do_on_abstract_task_execute() override
+    do_on_abstract_task_execute()
+      override
       {
         const auto session = this->m_weak_session.lock();
         if(!session)
@@ -307,7 +309,8 @@ struct Remote_Request_Fiber final : ::poseidon::Abstract_Fiber
 
     virtual
     void
-    do_on_abstract_fiber_execute() override
+    do_on_abstract_fiber_execute()
+      override
       {
         const auto impl = this->m_weak_impl.lock();
         if(!impl)
@@ -464,7 +467,8 @@ struct Remote_Request_Task final : ::poseidon::Abstract_Task
 
     virtual
     void
-    do_on_abstract_task_execute() override
+    do_on_abstract_task_execute()
+      override
       {
         const auto session = this->m_weak_session.lock();
         if(!session)
@@ -683,7 +687,8 @@ set_handler(const phcow_string& opcode, const handler_type& handler)
 
 bool
 Service::
-remove_handler(const phcow_string& opcode) noexcept
+remove_handler(const phcow_string& opcode)
+  noexcept
   {
     if(!this->m_impl)
       return false;
@@ -693,7 +698,8 @@ remove_handler(const phcow_string& opcode) noexcept
 
 const ::poseidon::UUID&
 Service::
-service_uuid() const noexcept
+service_uuid()
+  const noexcept
   {
     if(!this->m_impl)
       return ::poseidon::UUID::min();
@@ -703,7 +709,8 @@ service_uuid() const noexcept
 
 int
 Service::
-service_index() const noexcept
+service_index()
+  const noexcept
   {
     if(!this->m_impl)
       return 0;
@@ -713,7 +720,8 @@ service_index() const noexcept
 
 const cow_string&
 Service::
-application_name() const noexcept
+application_name()
+  const noexcept
   {
     if(!this->m_impl)
       return ::poseidon::empty_cow_string;
@@ -723,7 +731,8 @@ application_name() const noexcept
 
 int
 Service::
-zone_id() const noexcept
+zone_id()
+  const noexcept
   {
     if(!this->m_impl)
       return 0;
@@ -733,7 +742,8 @@ zone_id() const noexcept
 
 system_time
 Service::
-zone_start_time() const noexcept
+zone_start_time()
+  const noexcept
   {
     if(!this->m_impl)
       return system_time();
@@ -743,7 +753,8 @@ zone_start_time() const noexcept
 
 const cow_string&
 Service::
-service_type() const noexcept
+service_type()
+  const noexcept
   {
     if(!this->m_impl)
       return ::poseidon::empty_cow_string;
@@ -753,7 +764,8 @@ service_type() const noexcept
 
 const cow_uuid_dictionary<Service_Record>&
 Service::
-all_service_records() const noexcept
+all_service_records()
+  const noexcept
   {
     if(!this->m_impl)
       return empty_service_record_map;
@@ -763,7 +775,8 @@ all_service_records() const noexcept
 
 const Service_Record&
 Service::
-find_service_record_opt(const ::poseidon::UUID& remote_service_uuid) const noexcept
+find_service_record_opt(const ::poseidon::UUID& remote_service_uuid)
+  const noexcept
   {
     if(!this->m_impl)
       return Service_Record::null;

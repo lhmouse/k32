@@ -44,11 +44,13 @@ class Role_Service
 
     // Removes a handler for requests from clients.
     bool
-    remove_handler(const phcow_string& opcode) noexcept;
+    remove_handler(const phcow_string& opcode)
+      noexcept;
 
     // Gets a hydrated role on this service.
     shptr<Role>
-    find_online_role_opt(int64_t roid) const noexcept;
+    find_online_role_opt(int64_t roid)
+      const noexcept;
 
     // Reloads configuration.
     void

@@ -1312,7 +1312,8 @@ set_http_handler(const phcow_string& path, const http_handler_type& handler)
 
 bool
 User_Service::
-remove_http_handler(const phcow_string& path) noexcept
+remove_http_handler(const phcow_string& path)
+  noexcept
   {
     if(!this->m_impl)
       return false;
@@ -1343,7 +1344,8 @@ set_ws_authenticator(const phcow_string& path, const ws_authenticator_type& hand
 
 bool
 User_Service::
-remove_ws_authenticator(const phcow_string& path) noexcept
+remove_ws_authenticator(const phcow_string& path)
+  noexcept
   {
     if(!this->m_impl)
       return false;
@@ -1374,7 +1376,8 @@ set_ws_handler(const phcow_string& opcode, const ws_handler_type& handler)
 
 bool
 User_Service::
-remove_ws_handler(const phcow_string& opcode) noexcept
+remove_ws_handler(const phcow_string& opcode)
+  noexcept
   {
     if(!this->m_impl)
       return false;
@@ -1384,7 +1387,8 @@ remove_ws_handler(const phcow_string& opcode) noexcept
 
 const cow_dictionary<User_Record>&
 User_Service::
-all_user_records() const noexcept
+all_user_records()
+  const noexcept
   {
     if(!this->m_impl)
       return empty_user_map;
@@ -1394,7 +1398,8 @@ all_user_records() const noexcept
 
 const User_Record&
 User_Service::
-find_user_record_opt(const phcow_string& username) const noexcept
+find_user_record_opt(const phcow_string& username)
+  const noexcept
   {
     if(!this->m_impl)
       return User_Record::null;

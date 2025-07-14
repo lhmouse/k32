@@ -34,7 +34,8 @@ parse_from_string(const cow_string& str)
 
 cow_string
 User_Record::
-serialize_to_string() const
+serialize_to_string()
+  const
   {
     ::taxon::V_object root;
 

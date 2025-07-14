@@ -24,11 +24,13 @@ class Role_Service
 
     // Gets all online roles.
     const cow_int64_dictionary<Role_Record>&
-    all_role_records() const noexcept;
+    all_role_records()
+      const noexcept;
 
     // Gets properties of a role.
     const Role_Record&
-    find_role_record_opt(int64_t roid) const noexcept;
+    find_role_record_opt(int64_t roid)
+      const noexcept;
 
     // Reloads configuration.
     void

@@ -30,13 +30,14 @@ class HTTP_Future
   private:
     virtual
     void
-    do_on_abstract_future_initialize() override;
+    do_on_abstract_future_initialize()
+      override;
 
   public:
 #ifdef K32_FRIENDS_C84621A4_4E68_11F0_BA96_5254005015D2_
-    uint32_t& mf_resp_status_code() noexcept { return this->m_resp_status_code;  }
-    cow_string& mf_resp_content_type() noexcept { return this->m_resp_content_type;  }
-    cow_string& mf_resp_payload() noexcept { return this->m_resp_payload;  }
+    uint32_t& mf_resp_status_code() { return this->m_resp_status_code;  }
+    cow_string& mf_resp_content_type() { return this->m_resp_content_type;  }
+    cow_string& mf_resp_payload() { return this->m_resp_payload;  }
     void mf_abstract_future_complete() { this->do_abstract_future_initialize_once();  }
 #endif
     HTTP_Future(const HTTP_Future&) = delete;
@@ -45,26 +46,30 @@ class HTTP_Future
 
     // Gets the URI of the request message. This field is set by the constructor.
     const cow_string&
-    request_uri() const noexcept
+    request_uri()
+      const noexcept
       { return this->m_req_uri;  }
 
     // Gets the `Content-Type` of the request message. This field is set by the
     // constructor.
     const cow_string&
-    request_content_type() const noexcept
+    request_content_type()
+      const noexcept
       { return this->m_req_content_type;  }
 
     // Gets the payload of the request message. For a GET message, the payload
     // shall be empty. This field is set by the constructor.
     const cow_string&
-    request_payload() const noexcept
+    request_payload()
+      const noexcept
       { return this->m_req_payload;  }
 
     // Gets the status code of the response message. If the connection is closed
     // without a response, zero is returned. If `successful()` yields `false`,
     // an exception is thrown, and there is no effect.
     uint32_t
-    response_status_code() const
+    response_status_code()
+      const
       {
         this->check_success();
         return this->m_resp_status_code;
@@ -74,7 +79,8 @@ class HTTP_Future
     // header, an empty string is returned. If `successful()` yields `false`, an
     // exception is thrown, and there is no effect.
     const cow_string&
-    response_content_type() const
+    response_content_type()
+      const
       {
         this->check_success();
         return this->m_resp_content_type;
@@ -83,7 +89,8 @@ class HTTP_Future
     // Gets the payload of the response message. If `successful()` yields
     // `false`, an exception is thrown, and there is no effect.
     const cow_string&
-    response_payload() const
+    response_payload()
+      const
       {
         this->check_success();
         return this->m_resp_payload;

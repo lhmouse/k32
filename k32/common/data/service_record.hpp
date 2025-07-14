@@ -36,7 +36,8 @@ struct Service_Record
     parse_from_string(const cow_string& str);
 
     cow_string
-    serialize_to_string() const;
+    serialize_to_string()
+      const;
   };
 
 }  // namespace k32
