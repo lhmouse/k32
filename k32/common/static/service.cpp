@@ -181,9 +181,8 @@ do_client_ws_callback(const shptr<Implementation>& impl,
           if(remote_service_uuid.is_nil())
             return;
 
-          tinybuf_ln buf(move(data));
           ::taxon::Value temp_value;
-          POSEIDON_CHECK(temp_value.parse(buf));
+          POSEIDON_CHECK(temp_value.parse(data.data(), data.size()));
           ::taxon::V_object response = temp_value.as_object();
           temp_value.clear();
 
@@ -271,9 +270,8 @@ struct Remote_Response_Task final : ::poseidon::Abstract_Task
         if(!this->m_error.empty())
           this->m_response.try_emplace(&"@error", this->m_error);
 
-        tinybuf_ln buf;
-        ::taxon::Value(this->m_response).print_to(buf);
-        session->ws_send(::poseidon::ws_TEXT, buf);
+        auto str = ::taxon::Value(this->m_response).to_string();
+        session->ws_send(::poseidon::ws_TEXT, str);
       }
   };
 
@@ -413,9 +411,8 @@ do_server_ws_callback(const shptr<Implementation>& impl,
           if(request_service_uuid.is_nil())
             return;
 
-          tinybuf_ln buf(move(data));
           ::taxon::Value temp_value;
-          POSEIDON_CHECK(temp_value.parse(buf));
+          POSEIDON_CHECK(temp_value.parse(data.data(), data.size()));
           ::taxon::V_object request = temp_value.as_object();
           temp_value.clear();
 
@@ -478,9 +475,8 @@ struct Remote_Request_Task final : ::poseidon::Abstract_Task
         if(!this->m_weak_req.expired())
           this->m_request.try_emplace(&"@uuid", this->m_request_uuid.to_string());
 
-        tinybuf_ln buf;
-        ::taxon::Value(this->m_request).print_to(buf);
-        session->ws_send(::poseidon::ws_TEXT, buf);
+        auto str = ::taxon::Value(this->m_request).to_string();
+        session->ws_send(::poseidon::ws_TEXT, str);
       }
   };
 

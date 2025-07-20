@@ -249,9 +249,8 @@ do_welcome_client(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber&
     tx_args.try_emplace(&"%opcode", &"=role/list");
     tx_args.try_emplace(&"avatar_list", avatar_list);
 
-    tinybuf_ln buf;
-    ::taxon::Value(tx_args).print_to(buf, ::taxon::option_json_mode);
-    session->ws_send(::poseidon::ws_TEXT, buf);
+    auto str = ::taxon::Value(tx_args).to_string(::taxon::option_json_mode);
+    session->ws_send(::poseidon::ws_TEXT, str);
   }
 
 void
@@ -433,9 +432,8 @@ do_server_hws_callback(const shptr<Implementation>& impl,
           if(username.empty())
             return;
 
-          tinybuf_ln buf(move(data));
           ::taxon::Value temp_value;
-          POSEIDON_CHECK(temp_value.parse(buf, ::taxon::option_json_mode));
+          POSEIDON_CHECK(temp_value.parse(data.data(), data.size(), ::taxon::option_json_mode));
           ::taxon::V_object request = temp_value.as_object();
           temp_value.clear();
 
@@ -486,9 +484,8 @@ do_server_hws_callback(const shptr<Implementation>& impl,
           response.try_emplace(&"%serial", serial);
           temp_value = response;
 
-          buf.clear_buffer();
-          temp_value.print_to(buf, ::taxon::option_json_mode);
-          session->ws_send(::poseidon::ws_TEXT, buf);
+          auto str = temp_value.to_string(::taxon::option_json_mode);
+          session->ws_send(::poseidon::ws_TEXT, str);
           break;
         }
 
@@ -947,16 +944,16 @@ do_star_user_push_message(const shptr<Implementation>& impl, ::poseidon::Abstrac
 
     ////////////////////////////////////////////////////////////
     //
-    tinybuf_ln buf;
+    cow_string str;
     for(const auto& username : username_list)
       if(auto uconn = impl->connections.ptr(username))
         if(auto session = uconn->weak_session.lock()) {
-          if(buf.size() == 0) {
+          if(str.size() == 0) {
             ::taxon::V_object obj = client_data;
             obj.try_emplace(&"%opcode", client_opcode);
-            ::taxon::Value(obj).print_to(buf, ::taxon::option_json_mode);
+            ::taxon::Value(obj).print_to(str, ::taxon::option_json_mode);
           }
-          session->ws_send(::poseidon::ws_TEXT, buf);
+          session->ws_send(::poseidon::ws_TEXT, str);
         }
   }
 
