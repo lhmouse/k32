@@ -30,7 +30,8 @@ struct Service_Record
     ~Service_Record();
 
     static const Service_Record null;
-    explicit operator bool() const noexcept { return not this->service_uuid.is_nil();  }
+    explicit operator bool()
+      const noexcept { return !this->service_uuid.is_nil();  }
 
     void
     parse_from_string(const cow_string& str);

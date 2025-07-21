@@ -25,7 +25,8 @@ struct Service_Response
     ~Service_Response();
 
     static const Service_Response null;
-    explicit operator bool() const noexcept { return this->complete;  }
+    explicit operator bool()
+      const noexcept { return this->complete;  }
   };
 
 }  // namespace k32

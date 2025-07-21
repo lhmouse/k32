@@ -28,7 +28,8 @@ struct User_Record
     ~User_Record();
 
     static const User_Record null;
-    explicit operator bool() const noexcept { return not this->username.empty();  }
+    explicit operator bool()
+      const noexcept { return !this->username.empty();  }
 
     void
     parse_from_string(const cow_string& str);

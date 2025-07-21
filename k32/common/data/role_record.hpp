@@ -31,7 +31,8 @@ struct Role_Record
     ~Role_Record();
 
     static const Role_Record null;
-    explicit operator bool() const noexcept { return this->roid == 0;  }
+    explicit operator bool()
+      const noexcept { return this->roid == 0;  }
 
     void
     parse_from_string(const cow_string& str);
