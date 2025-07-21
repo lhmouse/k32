@@ -27,6 +27,13 @@ struct Service_Response
     static const Service_Response null;
     explicit operator bool()
       const noexcept { return this->complete;  }
+
+    void
+    parse_from_string(const cow_string& str);
+
+    cow_string
+    serialize_to_string()
+      const;
   };
 
 }  // namespace k32
