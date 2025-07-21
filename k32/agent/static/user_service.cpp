@@ -76,12 +76,12 @@ do_get_username(const shptr<Implementation>& impl, const shptr<::poseidon::WS_Se
 ::poseidon::UUID
 do_find_my_monitor()
   {
-    ::poseidon::UUID monitor_service_uuid;
+    ::poseidon::UUID monitor_service_uuid = ::poseidon::UUID::max();
     for(const auto& r : service.all_service_records())
       if((r.second.zone_id == service.zone_id()) && (r.second.service_type == "monitor"))
         monitor_service_uuid = r.first;
 
-    if(monitor_service_uuid == ::poseidon::UUID::min())
+    if(monitor_service_uuid == ::poseidon::UUID::max())
       POSEIDON_THROW(("No monitor service online"));
 
     return monitor_service_uuid;
@@ -154,14 +154,14 @@ do_role_login_common(const shptr<Implementation>& impl, ::poseidon::Abstract_Fib
       do_role_logout_common(impl, fiber, username);
 
     // Select a logic server with lowest load factor.
-    ::poseidon::UUID logic_service_uuid;
+    ::poseidon::UUID logic_service_uuid = ::poseidon::UUID::max();
     double load_factor = HUGE_VAL;
     for(const auto& r : service.all_service_records())
       if((r.second.zone_id == service.zone_id()) && (r.second.service_type == "logic")
             && (r.second.load_factor <= load_factor))
         logic_service_uuid = r.first;
 
-    if(logic_service_uuid == ::poseidon::UUID::min())
+    if(logic_service_uuid == ::poseidon::UUID::max())
       POSEIDON_THROW(("No logic service online"));
 
     // Lock the connection.
