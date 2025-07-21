@@ -208,9 +208,9 @@ strings:
 
 * Response Parameters
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
-  - `raw_avatars` <sub>array of strings</sub> : Roles that have been found. Keys
-    are role IDs in decimal, and values are raw avatar data as JSON-encoded
-    strings from database.
+  - `raw_avatars` <sub>object of strings</sub> : Roles that have been found.
+    - _key_ <sub>string</sub> : Role ID as decimal string.
+    - _value_ <sub>string</sub> : Raw avatar data, encoded in JSON.
 
 * Description
   Searches the _default_ database for all roles that belong to `username`, and
