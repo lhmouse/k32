@@ -105,7 +105,7 @@ const template_hpp = [
   '',
   '    static const $1 null;',
   '    explicit operator bool()',
-  '      const noexcept { return ? } // TODO: add null predictor',
+  '      const noexcept { return ? }  // TODO: add null predictor',
   '',
   '    void',
   '    parse_from_string(const cow_string& str);',
