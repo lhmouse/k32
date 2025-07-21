@@ -63,6 +63,7 @@ lib_common = static_library('common',
     sources: [
       'k32/common/data/service_record.cpp', 'k32/common/data/service_response.cpp',
       'k32/common/data/user_record.cpp', 'k32/common/data/role_record.cpp',
+      'k32/common/data/chat_thread.cpp',
       'k32/common/fiber/service_future.cpp', 'k32/common/fiber/http_future.cpp',
       'k32/common/static/service.cpp', 'k32/common/static/http_requestor.cpp',
       'k32/common/static/clock.cpp',
@@ -82,6 +83,14 @@ shared_module('k32_monitor',
     cpp_pch: 'k32/xprecompiled.hpp',
     sources: [
       'k32/monitor/globals.cpp', 'k32/monitor/static/role_service.cpp',
+    ],
+    link_with: lib_common,
+    install: true)
+
+shared_module('k32_chat',
+    cpp_pch: 'k32/xprecompiled.hpp',
+    sources: [
+      'k32/chat/globals.cpp', 'k32/chat/static/chat_service.cpp',
     ],
     link_with: lib_common,
     install: true)

@@ -10,13 +10,16 @@
    6. [`*user/ban/lift`](#userbanlift)
    7. [`*nickname/acquire`](#nicknameacquire)
    8. [`*nickname/release`](#nicknamerelease)
-3. [Monitor Service Opcodes](#monitor-service-opcodes)
+3. [Chat Service Opcodes](#chat-service-opcodes)
+   1. [`*chat/load_messages_by_thread`](#chatload_messages_by_thread)
+   2. [`*chat/save_message`](#chatsave_message)
+4. [Monitor Service Opcodes](#monitor-service-opcodes)
    1. [`*role/list`](#rolelist)
    2. [`*role/create`](#rolecreate)
    3. [`*role/load`](#roleload)
    4. [`*role/unload`](#roleunload)
    5. [`*role/flush`](#roleflush)
-4. [Logic Service Opcodes](#logic-service-opcodes)
+5. [Logic Service Opcodes](#logic-service-opcodes)
    1. [`*role/login`](#rolelogin)
    2. [`*role/logout`](#rolelogout)
    3. [`*role/reconnect`](#rolereconnect)
@@ -195,6 +198,43 @@ strings:
   Releases ownership of a nickname so it can be re-acquired by others.
 
 [back to table of contents](#table-of-contents)
+
+## Chat Service Opcodes
+
+### `*chat/load_messages_by_thread`
+
+* Service Type
+  - `"chat"`
+
+* Request Parameters
+  - `thread_key_list` <sub>array of strings</sub> : List of threads to check.
+  - `last_check_time` <sub>timestamp, optional</sub> : Timestamp of last check.
+
+* Response Parameters
+  - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+  - `raw_payload_list` <sub>array of strings</sub> : Message payloads, encoded
+    in JSON and sorted by time of creation.
+  - `check_time` <sub>timestamp</sub> : Timestamp of last check.
+
+* Description
+  Retrieves messages from all threads in `thread_key_list`. If `last_check_time`
+  is specified, only messages whose timestamp is _greater than_ `last_check_time`
+  are returned.
+
+### `*chat/save_message`
+
+* Service Type
+  - `"chat"`
+
+* Request Parameters
+  - `"thread_key"` <sub>string</sub> : Key of thread to append new message.
+  - `"raw_payload"` <sub>string</sub> : Message payload, encoded in JSON.
+
+* Response Parameters
+  - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+
+* Description
+  Appends a new message to the end of `thread_key`.
 
 ## Monitor Service Opcodes
 
