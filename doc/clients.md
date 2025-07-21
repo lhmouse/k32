@@ -96,15 +96,12 @@ strings:
 ### `+role/create`
 
 * Request Parameters
-
   - `nickname` <sub>string</sub> : Nickname of new role.
 
 * Response Parameters
-
   - `status` <sub>string</sub> : [General client-to-server status code.](#client-to-server-opcodes)
 
 * Description
-
   Creates a new role, and logs into the new role automatically.
 
 [back to table of contents](#table-of-contents)
@@ -112,15 +109,12 @@ strings:
 ### `+role/login`
 
 * Request Parameters
-
   - `roid` <sub>number</sub> : Unique ID of role to log into.
 
 * Response Parameters
-
   - `status` <sub>string</sub> : [General client-to-server status code.](#client-to-server-opcodes)
 
 * Description
-
   Selects a role to log into, which shall be one of the roles that were returned
   in an earlier `=role/list` notification.
 
@@ -129,15 +123,12 @@ strings:
 ### `+role/logout`
 
 * Request Parameters
-
   - _None_
 
 * Response Parameters
-
   - `status` <sub>string</sub> : [General client-to-server status code.](#client-to-server-opcodes)
 
 * Description
-
   Logs out from a role. After logging out, the server will send a new role list.
 
 [back to table of contents](#table-of-contents)
@@ -147,11 +138,9 @@ strings:
 ### `=role/list`
 
 * Notification Parameters
-
   - `avatar_list` <sub>array of objects</sub> : List of available roles.
 
 * Description
-
   This notification is sent after a user is authenticated successfully but no
   role is currently online. The client may choose to log into an existing role
   from `avatar_list`, or to create a new role.
@@ -161,11 +150,9 @@ strings:
 ### `=role/login`
 
 * Notification Parameters
-
   - TODO
 
 * Description
-
   This notification is sent when the user, either selects a role to log into, or
   reconnects to the server while a role is already online.
 
