@@ -255,10 +255,10 @@ do_star_role_login(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber
       }
 
       auto result = impl->hyd_roles.try_emplace(hyd.roinfo.roid, hyd);
-      if(result.second)
-        hyd.role->on_login();
-      else
+      if(!result.second)
         hyd = result.first->second;  // load conflict
+      else
+        hyd.role->on_login();
     }
 
     hyd.role->mf_agent_srv() = agent_service_uuid;
