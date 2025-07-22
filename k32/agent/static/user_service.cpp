@@ -78,7 +78,8 @@ do_find_my_monitor()
   {
     ::poseidon::UUID monitor_service_uuid = ::poseidon::UUID::max();
     for(const auto& r : service.all_service_records())
-      if((r.second.zone_id == service.zone_id()) && (r.second.service_type == "monitor"))
+      if((r.second.zone_id == service.zone_id()) && (r.second.service_type == "monitor")
+            && (r.first <= monitor_service_uuid))
         monitor_service_uuid = r.first;
 
     if(monitor_service_uuid == ::poseidon::UUID::max())
