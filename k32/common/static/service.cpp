@@ -227,6 +227,7 @@ do_client_ws_callback(const shptr<Implementation>& impl,
                 if(p->service_uuid != remote_service_uuid)
                   all_received &= p->complete;
                 else {
+                  POSEIDON_LOG_ERROR(("Connection to service `$1` has been lost"), remote_service_uuid);
                   p->error = &"Connection lost";
                   p->complete = true;
                 }
@@ -553,6 +554,7 @@ do_subscribe_timer_callback(const shptr<Implementation>& impl,
             if(p->service_uuid != remote_service_uuid)
               all_received &= p->complete;
             else {
+              POSEIDON_LOG_ERROR(("Connection to service `$1` has been lost"), remote_service_uuid);
               p->error = &"Connection lost";
               p->complete = true;
             }
@@ -866,7 +868,7 @@ launch(const shptr<Service_Future>& req)
       else {
         auto srv = this->m_impl->remote_services.ptr(resp.service_uuid);
         if(!srv) {
-          POSEIDON_LOG_DEBUG(("Service `$1` not found"), resp.service_uuid);
+          POSEIDON_LOG_ERROR(("Service `$1` not found"), resp.service_uuid);
           resp.error = &"Service not found";
           resp.complete = true;
           continue;

@@ -107,16 +107,17 @@ do_publish_user_on_redis(::poseidon::Abstract_Fiber& fiber, const User_Record& u
       User_Record old_uinfo;
       old_uinfo.parse_from_string(task2->result().as_string());
       if(old_uinfo._agent_srv != uinfo._agent_srv) {
-        // If the user exists a different service, disconnect them.
         POSEIDON_LOG_DEBUG(("`$1` login conflict with `$2`"), uinfo.username, old_uinfo._agent_srv);
+        if(service.find_service_record_opt(old_uinfo._agent_srv)) {
+          // Disconnect them on the other service.
+          ::taxon::V_object tx_args;
+          tx_args.try_emplace(&"username", old_uinfo.username.rdstr());
+          tx_args.try_emplace(&"ws_status", static_cast<int>(user_ws_status_login_conflict));
 
-        ::taxon::V_object tx_args;
-        tx_args.try_emplace(&"username", old_uinfo.username.rdstr());
-        tx_args.try_emplace(&"ws_status", static_cast<int>(user_ws_status_login_conflict));
-
-        auto srv_q = new_sh<Service_Future>(old_uinfo._agent_srv, &"*user/kick", tx_args);
-        service.launch(srv_q);
-        fiber.yield(srv_q);
+          auto srv_q = new_sh<Service_Future>(old_uinfo._agent_srv, &"*user/kick", tx_args);
+          service.launch(srv_q);
+          fiber.yield(srv_q);
+        }
       }
     }
 
