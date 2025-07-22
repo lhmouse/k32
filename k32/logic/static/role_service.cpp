@@ -196,6 +196,20 @@ do_star_role_login(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber
                    const ::poseidon::UUID& /*request_service_uuid*/,
                    ::taxon::V_object& response, const ::taxon::V_object& request)
   {
+    // * Request Parameters
+    //   - `roid` <sub>integer</sub> : ID of role to load.
+    //   - `agent_srv` <sub>string</sub> : UUID of _agent_ that holds client connection.
+    //   - `monitor_srv` <sub>string</sub> : UUID of _monitor_ that holds client data.
+    //
+    // * Response Parameters
+    //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+    //
+    // * Description
+    //   Loads a role from Redis and triggers a _login_ event. If the role has not been
+    //   loaded into Redis, this operation fails.
+
+    ////////////////////////////////////////////////////////////
+    //
     int64_t roid = request.at(&"roid").as_integer();
     POSEIDON_CHECK((roid >= 1) && (roid <= 8'99999'99999'99999));
 
@@ -259,6 +273,17 @@ do_star_role_logout(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
                     const ::poseidon::UUID& /*request_service_uuid*/,
                     ::taxon::V_object& response, const ::taxon::V_object& request)
   {
+    // * Request Parameters
+    //   - `roid` <sub>integer</sub> : ID of role to unload.
+    //
+    // * Response Parameters
+    //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+    //
+    // * Description
+    //   Triggers a _logout_ event, writes the role back to Redis, and unloads it.
+
+    ////////////////////////////////////////////////////////////
+    //
     int64_t roid = request.at(&"roid").as_integer();
     POSEIDON_CHECK((roid >= 1) && (roid <= 8'99999'99999'99999));
 
@@ -323,6 +348,17 @@ do_star_role_disconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_
                         const ::poseidon::UUID& /*request_service_uuid*/,
                         ::taxon::V_object& response, const ::taxon::V_object& request)
   {
+    // * Request Parameters
+    //   - `roid` <sub>integer</sub> : ID of role to disconnect.
+    //
+    // * Response Parameters
+    //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+    //
+    // * Description
+    //   Triggers a _disconnect_ event.
+
+    ////////////////////////////////////////////////////////////
+    //
     int64_t roid = request.at(&"roid").as_integer();
     POSEIDON_CHECK((roid >= 1) && (roid <= 8'99999'99999'99999));
 
@@ -347,6 +383,20 @@ do_star_role_on_client_request(const shptr<Implementation>& impl, ::poseidon::Ab
                                const ::poseidon::UUID& /*request_service_uuid*/,
                                ::taxon::V_object& response, const ::taxon::V_object& request)
   {
+    // * Request Parameters
+    //   - `roid` <sub>integer</sub> : ID of role on this client.
+    //   - `client_opcode` <sub>string</sub> : Opcode from client.
+    //   - `client_req` <sub>object, optional</sub> : Additional data for this opcode.
+    //
+    // * Response Parameters
+    //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+    //   - `client_resp` <sub>object, optional</sub> : Additional response data.
+    //
+    // * Description
+    //   Handles a request message from a client.
+
+    ////////////////////////////////////////////////////////////
+    //
     int64_t roid = request.at(&"roid").as_integer();
     POSEIDON_CHECK((roid >= 1) && (roid <= 8'99999'99999'99999));
 
@@ -386,6 +436,17 @@ do_star_clock_set_virtual_offset(const shptr<Implementation>& /*impl*/, ::poseid
                                  const ::poseidon::UUID& /*request_service_uuid*/,
                                  ::taxon::V_object& response, const ::taxon::V_object& request)
   {
+    // * Request Parameters
+    //   - `offset` <sub>integer</sub> : Virtual offset in seconds.
+    //
+    // * Response Parameters
+    //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+    //
+    // * Description
+    //   Sets virtual offset of the logic clock.
+
+    ////////////////////////////////////////////////////////////
+    //
     int64_t offset = request.at(&"offset").as_integer();
     POSEIDON_CHECK((offset >= -999999999) && (offset <= +999999999));
 

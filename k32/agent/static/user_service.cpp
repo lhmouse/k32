@@ -688,6 +688,23 @@ do_star_nickname_acquire(const shptr<Implementation>& /*impl*/, ::poseidon::Abst
                          const ::poseidon::UUID& /*request_service_uuid*/,
                          ::taxon::V_object& response, const ::taxon::V_object& request)
   {
+    // * Request Parameters
+    //   - `nickname` <sub>string</sub> : Nickname to acquire.
+    //   - `username` <sub>string</sub> : Owner of new nickname.
+    //
+    // * Response Parameters
+    //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+    //   - `serial` <sub>integer, optional</sub> : Serial number of new nickname.
+    //
+    // * Description
+    //   Attempts to acquire ownership of a nickname and returns its serial number.
+    //   Both the nickname and the serial number are unique within the _user_ database.
+    //   If the nickname already exists under the same username, the old serial
+    //   number is returned. If the nickname already exists under a different username,
+    //   no serial number is returned.
+
+    ////////////////////////////////////////////////////////////
+    //
     cow_string nickname = request.at(&"nickname").as_string();
     POSEIDON_CHECK(nickname != "");
 
@@ -758,6 +775,17 @@ do_star_nickname_release(const shptr<Implementation>& /*impl*/, ::poseidon::Abst
                          const ::poseidon::UUID& /*request_service_uuid*/,
                          ::taxon::V_object& response, const ::taxon::V_object& request)
   {
+    // * Request Parameters
+    //   - `nickname` <sub>string</sub> : Nickname to release.
+    //
+    // * Response Parameters
+    //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+    //
+    // * Description
+    //   Releases ownership of a nickname so it can be re-acquired by others.
+
+    ////////////////////////////////////////////////////////////
+    //
     cow_string nickname = request.at(&"nickname").as_string();
     POSEIDON_CHECK(nickname != "");
 
@@ -860,6 +888,21 @@ do_star_user_kick(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber&
                   const ::poseidon::UUID& /*request_service_uuid*/,
                   ::taxon::V_object& response, const ::taxon::V_object& request)
   {
+    // * Request Parameters
+    //   - `username` <sub>string</sub> : Name of user to kick.
+    //   - `ws_status` <sub>integer, optional</sub> : WebSocket status code.
+    //   - `reason` <sub>string, optional</sub> : Additional reason string.
+    //
+    // * Response Parameters
+    //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+    //
+    // * Description
+    //   Terminates the connection from a user, by sending a WebSocket closure
+    //   notification of `ws_status` and `reason`. The default value for `ws_status` is
+    //   `1008` (_Policy Violation_).
+
+    ////////////////////////////////////////////////////////////
+    //
     phcow_string username = request.at(&"username").as_string();
     POSEIDON_CHECK(username != "");
 
@@ -894,6 +937,18 @@ do_star_user_check_role(const shptr<Implementation>& impl, ::poseidon::Abstract_
                         const ::poseidon::UUID& request_service_uuid,
                         ::taxon::V_object& response, const ::taxon::V_object& request)
   {
+    // * Request Parameters
+    //   - `username` <sub>string</sub> : Name of user to test.
+    //   - `roid` <sub>integer</sub> : ID of current role.
+    //
+    // * Response Parameters
+    //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+    //
+    // * Description
+    //   Checks whether the specified user is online with the specified role.
+
+    ////////////////////////////////////////////////////////////
+    //
     phcow_string username = request.at(&"username").as_string();
     POSEIDON_CHECK(username != "");
 
@@ -927,6 +982,21 @@ do_star_user_push_message(const shptr<Implementation>& impl, ::poseidon::Abstrac
                           const ::poseidon::UUID& /*request_service_uuid*/,
                           ::taxon::V_object& /*response*/, const ::taxon::V_object& request)
   {
+    // * Request Parameters
+    //   - `username` <sub>strings, optional</sub> : A single target user.
+    //   - `username_list` <sub>array of strings, optional</sub> : List of target users.
+    //   - `client_opcode` <sub>string</sub> : Opcode to send to clients.
+    //   - `client_data` <sub>object, optional</sub> : Additional data for this opcode.
+    //
+    // * Response Parameters
+    //   - _None_
+    //
+    // * Description
+    //   Sends a message to all clients in `username` and `username_list`. If a user is
+    //   not online on this service, they are silently ignored.
+
+    ////////////////////////////////////////////////////////////
+    //
     ::std::vector<phcow_string> username_list;
     if(auto plist = request.ptr(&"username_list"))
       for(const auto& r : plist->as_array())
@@ -1039,6 +1109,17 @@ do_star_user_reload_relay_conf(const shptr<Implementation>& impl, ::poseidon::Ab
                                const ::poseidon::UUID& /*request_service_uuid*/,
                                ::taxon::V_object& response, const ::taxon::V_object& /*request*/)
   {
+    // * Request Parameters
+    //   - _None_
+    //
+    // * Response Parameters
+    //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+    //
+    // * Description
+    //   Reloads relay rules for client opcodes from `relay.conf`.
+
+    ////////////////////////////////////////////////////////////
+    //
     do_reload_relay_conf(impl);
 
     response.try_emplace(&"status", &"gs_ok");
@@ -1049,6 +1130,19 @@ do_star_user_ban_set(const shptr<Implementation>& impl, ::poseidon::Abstract_Fib
                      const ::poseidon::UUID& /*request_service_uuid*/,
                      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
+    // * Request Parameters
+    //   - `username` <sub>string</sub> : Name of user to ban.
+    //   - `until` <sub>timestamp</sub> : Ban in effect until this time point.
+    //
+    // * Response Parameters
+    //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+    //
+    // * Description
+    //   Sets a ban on a user until a given time point. If the user is online, they are
+    //   kicked with `reason`.
+
+    ////////////////////////////////////////////////////////////
+    //
     phcow_string username = request.at(&"username").as_string();
     POSEIDON_CHECK(username != "");
 
@@ -1099,6 +1193,17 @@ do_star_user_ban_lift(const shptr<Implementation>& impl, ::poseidon::Abstract_Fi
                       const ::poseidon::UUID& /*request_service_uuid*/,
                       ::taxon::V_object& response, const ::taxon::V_object& request)
   {
+    // * Request Parameters
+    //   - `username` <sub>string</sub> : Name of user to ban.
+    //
+    // * Response Parameters
+    //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+    //
+    // * Description
+    //   Lifts a ban on a user.
+
+    ////////////////////////////////////////////////////////////
+    //
     phcow_string username = request.at(&"username").as_string();
     POSEIDON_CHECK(username != "");
 
