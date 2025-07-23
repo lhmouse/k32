@@ -1001,8 +1001,10 @@ do_star_user_push_message(const shptr<Implementation>& impl, ::poseidon::Abstrac
     //
     ::std::vector<phcow_string> username_list;
     if(auto plist = request.ptr(&"username_list"))
-      for(const auto& r : plist->as_array())
+      for(const auto& r : plist->as_array()) {
+        POSEIDON_CHECK(r.as_string() != "");
         username_list.emplace_back(r.as_string());
+      }
 
     if(auto ptr = request.ptr(&"username"))
       username_list.emplace_back(ptr->as_string());
