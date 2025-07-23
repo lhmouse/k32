@@ -163,12 +163,22 @@ do_save_timer_callback(const shptr<Implementation>& impl,
                 it->second.roids_by_username.erase(rr.first);
         }
 
-        for(const auto& rr : it->second.roids_by_username)
-          if(auto ptr = impl->hyd_roles.ptr(rr.second)) {
-            ptr->role->mf_agent_srv() = ::poseidon::UUID::min();
-            ptr->role->mf_dc_since() = now;
-            ptr->role->on_disconnect();
-          }
+        for(const auto& rr : it->second.roids_by_username) {
+          Hydrated_Role hyd;
+          if(!impl->hyd_roles.find_and_copy(hyd, rr.second))
+            continue;
+
+          if(hyd.role->mf_agent_srv() != it->first)
+            continue;
+
+          hyd.role->mf_agent_srv() = ::poseidon::UUID::min();
+          hyd.role->mf_dc_since() = now;
+          hyd.role->on_disconnect();
+
+          do_store_role_into_redis(fiber, hyd, impl->redis_role_ttl);
+          impl->hyd_roles.find_and_assign(rr.second, hyd);
+          do_flush_role_to_mysql(fiber, hyd);
+        }
       }
     }
 
@@ -206,14 +216,14 @@ do_save_timer_callback(const shptr<Implementation>& impl,
         // Role has been disconnected for too long.
         POSEIDON_LOG_DEBUG(("Logging out role `$1` due to inactivity"), hyd.roinfo.roid);
         hyd.role->on_logout();
+
         do_store_role_into_redis(fiber, hyd, impl->redis_role_ttl);
         impl->hyd_roles.erase(roid);
         do_flush_role_to_mysql(fiber, hyd);
       }
       else {
         do_store_role_into_redis(fiber, hyd, impl->redis_role_ttl);
-        if(auto ptr = impl->hyd_roles.mut_ptr(roid))
-          *ptr = hyd;
+        impl->hyd_roles.find_and_assign(roid, hyd);
       }
     }
   }
@@ -292,6 +302,10 @@ do_star_role_login(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber
     hyd.role->mf_monitor_srv() = monitor_service_uuid;
     hyd.role->on_connect();
 
+    do_store_role_into_redis(fiber, hyd, impl->redis_role_ttl);
+    impl->hyd_roles.find_and_assign(roid, hyd);
+    do_flush_role_to_mysql(fiber, hyd);
+
     response.try_emplace(&"status", &"gs_ok");
   }
 
@@ -323,13 +337,11 @@ do_star_role_logout(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
       return;
     }
 
-    if(!hyd.role->disconnected()) {
-      hyd.role->mf_agent_srv() = ::poseidon::UUID::min();
-      hyd.role->mf_dc_since() = steady_clock::now();
-      hyd.role->on_disconnect();
-    }
-
+    hyd.role->mf_agent_srv() = ::poseidon::UUID::min();
+    hyd.role->mf_dc_since() = steady_clock::now();
+    hyd.role->on_disconnect();
     hyd.role->on_logout();
+
     do_store_role_into_redis(fiber, hyd, impl->redis_role_ttl);
     impl->hyd_roles.erase(roid);
     do_flush_role_to_mysql(fiber, hyd);
@@ -369,7 +381,7 @@ do_star_role_reconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_F
   }
 
 void
-do_star_role_disconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
+do_star_role_disconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
                         const ::poseidon::UUID& /*request_service_uuid*/,
                         ::taxon::V_object& response, const ::taxon::V_object& request)
   {
@@ -399,6 +411,10 @@ do_star_role_disconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_
     hyd.role->mf_agent_srv() = ::poseidon::UUID::min();
     hyd.role->mf_dc_since() = steady_clock::now();
     hyd.role->on_disconnect();
+
+    do_store_role_into_redis(fiber, hyd, impl->redis_role_ttl);
+    impl->hyd_roles.find_and_assign(roid, hyd);
+    do_flush_role_to_mysql(fiber, hyd);
 
     response.try_emplace(&"status", &"gs_ok");
   }
