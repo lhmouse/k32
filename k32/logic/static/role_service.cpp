@@ -303,7 +303,6 @@ do_star_role_logout(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
     }
 
     hyd.role->on_logout();
-
     do_store_role_into_redis(fiber, hyd, impl->redis_role_ttl);
     impl->hyd_roles.erase(roid);
     do_flush_role_to_mysql(fiber, hyd);
@@ -318,9 +317,8 @@ do_star_role_reconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_F
   {
     ::std::vector<int64_t> roid_list;
     for(const auto& r : request.at(&"roid_list").as_array()) {
-      int64_t roid = r.as_integer();
-      POSEIDON_CHECK((roid >= 1) && (roid <= 8'99999'99999'99999));
-      roid_list.push_back(roid);
+      POSEIDON_CHECK((r.as_integer() >= 1) && (r.as_integer() <= 8'99999'99999'99999));
+      roid_list.push_back(r.as_integer());
     }
 
     ::poseidon::UUID agent_service_uuid(request.at(&"agent_srv").as_string());
