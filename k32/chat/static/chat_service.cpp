@@ -259,6 +259,9 @@ do_save_timer_callback(const shptr<Implementation>& impl,
       if(!impl->chat_threads.find_and_copy(thread, thread_key))
         continue;
 
+      if(system_clock::now() - thread.update_time > impl->cached_thread_ttl)
+        impl->chat_threads.erase(thread_key);
+
       // Truncate the message list.
       if(thread.messages.size() > impl->max_number_of_messages_per_thread)
         thread.messages.erase(0, thread.messages.size() - impl->max_number_of_messages_per_thread);
@@ -281,9 +284,6 @@ do_save_timer_callback(const shptr<Implementation>& impl,
                                                           &replace_into_chat, sql_args);
       ::poseidon::task_scheduler.launch(task1);
       fiber.yield(task1);
-
-      if(system_clock::now() - thread.update_time > impl->cached_thread_ttl)
-        impl->chat_threads.erase(thread_key);
     }
   }
 
