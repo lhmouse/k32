@@ -101,10 +101,10 @@ do_star_chat_check_threads(const shptr<Implementation>& impl, ::poseidon::Abstra
     if(auto ptr = request.ptr(&"last_check_time"))
       last_check_time = ptr->as_time();
 
-    ////////////////////////////////////////////////////////////
-    //
     POSEIDON_CHECK(impl->db_ready);
 
+    ////////////////////////////////////////////////////////////
+    //
     ::std::multimap<system_time, cow_string> sorted_messages;
     const pair<system_time, cow_string> origin(last_check_time, &"");
 
@@ -175,10 +175,10 @@ do_star_chat_save_message(const shptr<Implementation>& impl, ::poseidon::Abstrac
     cow_string raw_payload = request.at(&"raw_payload").as_string();
     POSEIDON_CHECK(raw_payload != "");
 
-    ////////////////////////////////////////////////////////////
-    //
     POSEIDON_CHECK(impl->db_ready);
 
+    ////////////////////////////////////////////////////////////
+    //
     Chat_Thread thread;
     if(!impl->chat_threads.find_and_copy(thread, thread_key)) {
       // Load thread from MySQL. If no such thread exists, create a new one.

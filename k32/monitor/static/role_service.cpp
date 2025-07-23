@@ -146,10 +146,10 @@ do_star_role_list(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber&
     phcow_string username = request.at(&"username").as_string();
     POSEIDON_CHECK(username != "");
 
-    ////////////////////////////////////////////////////////////
-    //
     POSEIDON_CHECK(impl->db_ready);
 
+    ////////////////////////////////////////////////////////////
+    //
     static constexpr char select_avatar_from_role[] =
         R"!!!(
           SELECT `roid`
@@ -217,10 +217,10 @@ do_star_role_create(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
     cow_string nickname = request.at(&"nickname").as_string();
     POSEIDON_CHECK(nickname != "");
 
-    ////////////////////////////////////////////////////////////
-    //
     POSEIDON_CHECK(impl->db_ready);
 
+    ////////////////////////////////////////////////////////////
+    //
     Role_Record roinfo;
     roinfo.roid = roid;
     roinfo.username = username;
@@ -317,10 +317,10 @@ do_star_role_load(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber&
     int64_t roid = request.at(&"roid").as_integer();
     POSEIDON_CHECK((roid >= 1) && (roid <= 8'99999'99999'99999));
 
-    ////////////////////////////////////////////////////////////
-    //
     POSEIDON_CHECK(impl->db_ready);
 
+    ////////////////////////////////////////////////////////////
+    //
     Role_Record roinfo;
     roinfo.roid = roid;
 
@@ -426,10 +426,10 @@ do_star_role_unload(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
     int64_t roid = request.at(&"roid").as_integer();
     POSEIDON_CHECK((roid >= 1) && (roid <= 8'99999'99999'99999));
 
-    ////////////////////////////////////////////////////////////
-    //
     POSEIDON_CHECK(impl->db_ready);
 
+    ////////////////////////////////////////////////////////////
+    //
     cow_vector<cow_string> redis_cmd;
     redis_cmd.emplace_back(&"GET");
     redis_cmd.emplace_back(sformat("$1/role/$2", service.application_name(), roid));
@@ -509,10 +509,10 @@ do_star_role_flush(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber
     int64_t roid = request.at(&"roid").as_integer();
     POSEIDON_CHECK((roid >= 1) && (roid <= 8'99999'99999'99999));
 
-    ////////////////////////////////////////////////////////////
-    //
     POSEIDON_CHECK(impl->db_ready);
 
+    ////////////////////////////////////////////////////////////
+    //
     POSEIDON_LOG_INFO(("#sav# Flushing role `$1`"), roid);
 
     cow_vector<cow_string> redis_cmd;

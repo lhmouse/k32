@@ -1151,10 +1151,10 @@ do_star_user_ban_set(const shptr<Implementation>& impl, ::poseidon::Abstract_Fib
     system_time until = request.at(&"until").as_time();
     POSEIDON_CHECK(until.time_since_epoch() >= 946684800s);  // 2000-1-1
 
-    ////////////////////////////////////////////////////////////
-    //
     POSEIDON_CHECK(impl->db_ready);
 
+    ////////////////////////////////////////////////////////////
+    //
     static constexpr char update_user_banned_until[] =
         R"!!!(
           UPDATE `user`
@@ -1209,10 +1209,10 @@ do_star_user_ban_lift(const shptr<Implementation>& impl, ::poseidon::Abstract_Fi
     phcow_string username = request.at(&"username").as_string();
     POSEIDON_CHECK(username != "");
 
-    ////////////////////////////////////////////////////////////
-    //
     POSEIDON_CHECK(impl->db_ready);
 
+    ////////////////////////////////////////////////////////////
+    //
     static constexpr char update_user_banned_until[] =
         R"!!!(
           UPDATE `user`
