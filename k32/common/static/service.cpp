@@ -604,7 +604,7 @@ do_publish_timer_callback(const shptr<Implementation>& impl,
     // Get all running network interfaces.
     ::poseidon::IPv6_Address addr = impl->private_server.local_address();
     if(addr.port() != 0) {
-      ::rocket::unique_ptr<::ifaddrs, void (::ifaddrs*)> guard(nullptr, ::freeifaddrs);
+      ::rocket::unique_ptr<::ifaddrs, vfn<::ifaddrs*>> guard(nullptr, ::freeifaddrs);
       ::ifaddrs* ifa = nullptr;
       if(::getifaddrs(&ifa) == 0)
         guard.reset(ifa);

@@ -50,10 +50,10 @@ struct Clock_Fields
 // Callback helper
 template<typename xSelf, typename xOther, typename... xArgs>
 ROCKET_ALWAYS_INLINE
-shared_function<void (xArgs...)>
+shared_function<vfn<xArgs...>>
 bindw(const shptr<xSelf>& self, vfn<const shptr<xOther>&, xArgs...>* pfunc)
   {
-    return shared_function<void (xArgs...)>(
+    return shared_function<vfn<xArgs...>>(
         [w = wkptr<xOther>(self), pfunc] (xArgs&&... args) {
           if(const auto other = w.lock())
             (*pfunc) (other, forward<xArgs>(args)...);
