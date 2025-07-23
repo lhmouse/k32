@@ -935,47 +935,47 @@ do_star_user_kick(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber&
   }
 
 void
-do_star_user_check_role(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
-                        const ::poseidon::UUID& request_service_uuid,
-                        ::taxon::V_object& response, const ::taxon::V_object& request)
+do_star_user_check_roles(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
+                         const ::poseidon::UUID& /*request_service_uuid*/,
+                         ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
-    //   - `username` <sub>string</sub> : Name of user to test.
-    //   - `roid` <sub>integer</sub> : ID of current role.
+    //   - `username_list` <sub>array of strings</sub> : List of users.
     //
     // * Response Parameters
     //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+    //   - `roles` <sub>object of objects</sub> : Users and their roles.
+    //     - _key_ <sub>string</sub> : Username.
+    //     - `roid` <sub>integer, optional</sub> : Current role ID.
+    //     - `logic_srv` <sub>string, optional</sub> : Current logic service UUID.
     //
     // * Description
-    //   Checks whether the specified user is online with the specified role.
+    //   Gets role statistics of all users in `username_list`.
 
     ////////////////////////////////////////////////////////////
     //
-    phcow_string username = request.at(&"username").as_string();
-    POSEIDON_CHECK(username != "");
-
-    int64_t roid = request.at(&"roid").as_integer();
-    POSEIDON_CHECK((roid >= 1) && (roid <= 8'99999'99999'99999));
+    ::std::vector<phcow_string> username_list;
+    if(auto plist = request.ptr(&"username_list"))
+      for(const auto& r : plist->as_array()) {
+        POSEIDON_CHECK(r.as_string() != "");
+        username_list.emplace_back(r.as_string());
+      }
 
     ////////////////////////////////////////////////////////////
     //
-    User_Connection uconn;
-    impl->connections.find_and_copy(uconn, username);
-    if(uconn.weak_session.expired()) {
-      response.try_emplace(&"status", &"gs_user_not_online");
-      return;
+    ::taxon::V_object roles;
+    for(const auto& username : username_list) {
+      auto& role = roles.open(username).open_object();
+
+      User_Connection uconn;
+      if(!impl->connections.find_and_copy(uconn, username))
+        continue;
+
+      role.try_emplace(&"roid", uconn.current_roid);
+      role.try_emplace(&"logic_srv", uconn.current_logic_srv.to_string());
     }
 
-    if(uconn.current_roid != roid) {
-      response.try_emplace(&"status", &"gs_roid_not_match");
-      return;
-    }
-
-    if(uconn.current_logic_srv != request_service_uuid) {
-      response.try_emplace(&"status", &"gs_service_uuid_not_match");
-      return;
-    }
-
+    response.try_emplace(&"roles", roles);
     response.try_emplace(&"status", &"gs_ok");
   }
 
@@ -1575,7 +1575,7 @@ reload(const ::poseidon::Config_File& conf_file)
 
     // Set up request handlers.
     service.set_handler(&"*user/kick", bindw(this->m_impl, do_star_user_kick));
-    service.set_handler(&"*user/check_role", bindw(this->m_impl, do_star_user_check_role));
+    service.set_handler(&"*user/check_roles", bindw(this->m_impl, do_star_user_check_roles));
     service.set_handler(&"*user/push_message", bindw(this->m_impl, do_star_user_push_message));
     service.set_handler(&"*user/reload_relay_conf", bindw(this->m_impl, do_star_user_reload_relay_conf));
     service.set_handler(&"*user/ban/set", bindw(this->m_impl, do_star_user_ban_set));

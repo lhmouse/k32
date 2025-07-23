@@ -120,6 +120,58 @@ do_save_timer_callback(const shptr<Implementation>& impl,
                        const shptr<::poseidon::Abstract_Timer>& /*timer*/,
                        ::poseidon::Abstract_Fiber& fiber, steady_time now)
   {
+    if(!impl->hyd_roles.empty()) {
+      // Check that every user is still on the same agent with the same role.
+      // Requests are made in parallel.
+      struct Agent_Request
+        {
+          cow_dictionary<int64_t> roids_by_username;
+          ::taxon::V_array username_list;
+          shptr<Service_Future> srv_q;
+        };
+
+      cow_uuid_dictionary<Agent_Request> agent_requests;
+      for(const auto& r : impl->hyd_roles)
+        if(!r.second.role->disconnected()) {
+          auto& ar = agent_requests.open(r.second.role->agent_service_uuid());
+          ar.roids_by_username.try_emplace(r.second.roinfo.username, r.second.roinfo.roid);
+          ar.username_list.emplace_back(r.second.roinfo.username.rdstr());
+        }
+
+      for(auto it = agent_requests.mut_begin();  it != agent_requests.end();  ++it) {
+        ::taxon::V_object tx_args;
+        tx_args.try_emplace(&"username_list", it->second.username_list);
+
+        it->second.srv_q = new_sh<Service_Future>(it->first, &"*user/check_roles", tx_args);
+        service.launch(it->second.srv_q);
+      }
+
+      for(auto it = agent_requests.mut_begin();  it != agent_requests.end();  ++it) {
+        fiber.yield(it->second.srv_q);
+
+        for(const auto& resp : it->second.srv_q->responses()) {
+          // If a user is on their original agent with the same role, then they
+          // are not expired.
+          auto ptr = resp.obj.ptr(&"roles");
+          if(ptr && ptr->is_object())
+            for(const auto& rr : ptr->as_object())
+              if(rr.second.is_object()
+                  && (rr.second.as_object().at(&"roid").as_integer()
+                      == it->second.roids_by_username.at(rr.first))
+                  && (::poseidon::UUID(rr.second.as_object().at(&"logic_srv").as_string())
+                      == service.service_uuid()))
+                it->second.roids_by_username.erase(rr.first);
+        }
+
+        for(const auto& rr : it->second.roids_by_username)
+          if(auto ptr = impl->hyd_roles.ptr(rr.second)) {
+            ptr->role->mf_agent_srv() = ::poseidon::UUID::min();
+            ptr->role->mf_dc_since() = now;
+            ptr->role->on_disconnect();
+          }
+      }
+    }
+
     if(impl->save_buckets.empty()) {
       // Arrange online roles for writing. Initially, users are divided into 20
       // buckets. For each timer tick, one bucket will be popped and written.
@@ -150,35 +202,10 @@ do_save_timer_callback(const shptr<Implementation>& impl,
       if(!hyd.role)
         continue;
 
-      if(!hyd.role->disconnected()) {
-        // Check client connection with agent.
-        ::taxon::V_object tx_args;
-        tx_args.try_emplace(&"username", hyd.role->username().rdstr());
-        tx_args.try_emplace(&"roid", hyd.role->roid());
-
-        auto srv_q = new_sh<Service_Future>(hyd.role->agent_service_uuid(), &"*user/check_role", tx_args);
-        service.launch(srv_q);
-        fiber.yield(srv_q);
-
-        if(!impl->hyd_roles.count(roid))
-          continue;
-
-        cow_string status;
-        if(auto ptr = srv_q->response(0).obj.ptr(&"status"))
-          status = ptr->as_string();
-
-        if(status != "gs_ok") {
-          hyd.role->mf_agent_srv() = ::poseidon::UUID::min();
-          hyd.role->mf_dc_since() = now;
-          hyd.role->on_disconnect();
-        }
-      }
-
       if(hyd.role->disconnected() && (now - hyd.role->mf_dc_since() >= impl->disconnect_to_logout_duration)) {
         // Role has been disconnected for too long.
         POSEIDON_LOG_DEBUG(("Logging out role `$1` due to inactivity"), hyd.roinfo.roid);
         hyd.role->on_logout();
-
         do_store_role_into_redis(fiber, hyd, impl->redis_role_ttl);
         impl->hyd_roles.erase(roid);
         do_flush_role_to_mysql(fiber, hyd);

@@ -3,7 +3,7 @@
 1. [General Status Codes](#general-status-codes)
 2. [Agent Service Opcodes](#agent-service-opcodes)
    1. [`*user/kick`](#userkick)
-   2. [`*user/check_role`](#usercheck_role)
+   2. [`*user/check_roles`](#usercheck_roles)
    3. [`*user/push_message`](#userpush_message)
    4. [`*user/reload_relay_conf`](#userreload_relay_conf)
    5. [`*user/ban/set`](#userbanset)
@@ -41,7 +41,6 @@ strings:
 |`gs_nickname_not_found`      |Nickname not found in database.               |
 |`gs_roid_conflict`           |Role ID already exists in database.           |
 |`gs_roid_not_found`          |Role ID not found in database.                |
-|`gs_roid_not_match`          |Role ID not match.                            |
 |`gs_service_uuid_not_match`  |Service UUID not match.                       |
 |`gs_role_not_loaded`         |Role not loaded in Redis.                     |
 |`gs_role_foreign`            |Role belongs to another server.               |
@@ -74,20 +73,23 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*user/check_role`
+### `*user/check_roles`
 
 * Service Type
   - `"agent"`
 
 * Request Parameters
-  - `username` <sub>string</sub> : Name of user to test.
-  - `roid` <sub>integer</sub> : ID of current role.
+  - `username_list` <sub>array of strings</sub> : List of users.
 
 * Response Parameters
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+  - `roles` <sub>object of objects</sub> : Users and their roles.
+    - _key_ <sub>string</sub> : Username.
+    - `roid` <sub>integer, optional</sub> : Current role ID.
+    - `logic_srv` <sub>string, optional</sub> : Current logic service UUID.
 
 * Description
-  Checks whether the specified user is online with the specified role.
+  Gets role statistics of all users in `username_list`.
 
 [back to table of contents](#table-of-contents)
 
