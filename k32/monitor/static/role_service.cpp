@@ -566,12 +566,14 @@ do_save_timer_callback(const shptr<Implementation>& impl,
         impl->save_buckets.emplace_back();
 
       for(const auto& r : impl->role_records) {
-        auto first_bucket = impl->save_buckets.begin();
-        if(first_bucket->size() >= first_bucket->capacity())
-          first_bucket = impl->save_buckets.emplace(first_bucket);
-
-        first_bucket->push_back(r.first);
-        impl->save_buckets.splice(impl->save_buckets.end(), impl->save_buckets, first_bucket);
+        auto current_bucket = impl->save_buckets.begin();
+        impl->save_buckets.splice(impl->save_buckets.end(), impl->save_buckets, current_bucket);
+        if(current_bucket->size() >= current_bucket->capacity()) {
+          ptrdiff_t sp = static_cast<ptrdiff_t>(current_bucket->capacity() / 2);
+          impl->save_buckets.emplace_back(current_bucket->begin(), current_bucket->begin() + sp);
+          current_bucket->erase(current_bucket->begin(), current_bucket->begin() + sp);
+        }
+        current_bucket->push_back(r.first);
       }
     }
 
