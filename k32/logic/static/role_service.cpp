@@ -171,7 +171,7 @@ do_save_timer_callback(const shptr<Implementation>& impl,
           if(hyd.role->mf_agent_srv() != it->first)
             continue;
 
-          hyd.role->mf_agent_srv() = ::poseidon::UUID::min();
+          hyd.role->mf_agent_srv() = ::poseidon::UUID();
           hyd.role->mf_dc_since() = now;
           hyd.role->on_disconnect();
 
@@ -337,7 +337,7 @@ do_star_role_logout(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
       return;
     }
 
-    hyd.role->mf_agent_srv() = ::poseidon::UUID::min();
+    hyd.role->mf_agent_srv() = ::poseidon::UUID();
     hyd.role->mf_dc_since() = steady_clock::now();
     hyd.role->on_disconnect();
     hyd.role->on_logout();
@@ -408,7 +408,7 @@ do_star_role_disconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_
       return;
     }
 
-    hyd.role->mf_agent_srv() = ::poseidon::UUID::min();
+    hyd.role->mf_agent_srv() = ::poseidon::UUID();
     hyd.role->mf_dc_since() = steady_clock::now();
     hyd.role->on_disconnect();
 

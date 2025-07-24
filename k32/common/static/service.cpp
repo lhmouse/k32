@@ -700,7 +700,7 @@ service_uuid()
   const noexcept
   {
     if(!this->m_impl)
-      return ::poseidon::UUID::min();
+      return ::poseidon::UUID();
 
     return this->m_impl->service_uuid;
   }
