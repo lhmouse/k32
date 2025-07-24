@@ -414,10 +414,6 @@ do_star_role_disconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_
     hyd.role->mf_dc_since() = steady_clock::now();
     hyd.role->on_disconnect();
 
-    do_store_role_into_redis(fiber, hyd, impl->redis_role_ttl);
-    impl->hyd_roles.find_and_assign(roid, hyd);
-    do_flush_role_to_mysql(fiber, hyd);
-
     response.try_emplace(&"status", &"gs_ok");
   }
 
