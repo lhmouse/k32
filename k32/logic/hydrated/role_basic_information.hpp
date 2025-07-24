@@ -34,28 +34,23 @@ class Role_Basic_Information
     // These fields are read-only.
     int64_t
     roid()
-      const noexcept
-      { return this->m_roid;  }
+      const noexcept { return this->m_roid;  }
 
     const phcow_string&
     username()
-      const noexcept
-      { return this->m_username;  }
+      const noexcept { return this->m_username;  }
 
     const cow_string&
     nickname()
-      const noexcept
-      { return this->m_nickname;  }
+      const noexcept { return this->m_nickname;  }
 
     const ::poseidon::UUID&
     agent_service_uuid()
-      const noexcept
-      { return this->m_agent_srv;  }
+      const noexcept { return this->m_agent_srv;  }
 
     bool
     disconnected()
-      const noexcept
-      { return this->m_agent_srv.is_nil();  }
+      const noexcept { return this->m_agent_srv.is_nil();  }
   };
 
 inline
