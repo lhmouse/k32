@@ -964,15 +964,12 @@ do_star_user_check_roles(const shptr<Implementation>& impl, ::poseidon::Abstract
     ////////////////////////////////////////////////////////////
     //
     ::taxon::V_object roles;
-    for(const auto& username : username_list) {
-      User_Connection uconn;
-      if(!impl->connections.find_and_copy(uconn, username))
-        continue;
-
-      auto& role = roles.open(username).open_object();
-      role.try_emplace(&"roid", uconn.current_roid);
-      role.try_emplace(&"logic_srv", uconn.current_logic_srv.to_string());
-    }
+    for(const auto& username : username_list)
+      if(auto uconn = impl->connections.ptr(username)) {
+        auto& role = roles.open(username).open_object();
+        role.try_emplace(&"roid", uconn->current_roid);
+        role.try_emplace(&"logic_srv", uconn->current_logic_srv.to_string());
+      }
 
     response.try_emplace(&"roles", roles);
     response.try_emplace(&"status", &"gs_ok");
