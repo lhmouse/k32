@@ -132,7 +132,7 @@ do_save_timer_callback(const shptr<Implementation>& impl,
 
       cow_uuid_dictionary<Agent_Request> agent_requests;
       for(const auto& r : impl->hyd_roles)
-        if(!r.second.role->disconnected()) {
+        if(r.second.role->agent_service_uuid() != ::poseidon::UUID()) {
           auto& ar = agent_requests.open(r.second.role->agent_service_uuid());
           ar.roids_by_username.try_emplace(r.second.roinfo.username, r.second.roinfo.roid);
           ar.username_list.emplace_back(r.second.roinfo.username.rdstr());
@@ -212,7 +212,7 @@ do_save_timer_callback(const shptr<Implementation>& impl,
       if(!hyd.role)
         continue;
 
-      if(hyd.role->disconnected() && (now - hyd.role->mf_dc_since() >= impl->disconnect_to_logout_duration)) {
+      if(now - hyd.role->mf_dc_since() >= impl->disconnect_to_logout_duration) {
         // Role has been disconnected for too long.
         POSEIDON_LOG_DEBUG(("Logging out role `$1` due to inactivity"), hyd.roinfo.roid);
         hyd.role->on_logout();
@@ -300,6 +300,7 @@ do_star_role_login(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber
 
     hyd.role->mf_agent_srv() = agent_service_uuid;
     hyd.role->mf_monitor_srv() = monitor_service_uuid;
+    hyd.role->mf_dc_since() = steady_time::max();
     hyd.role->on_connect();
 
     do_store_role_into_redis(fiber, hyd, impl->redis_role_ttl);
@@ -374,6 +375,7 @@ do_star_role_reconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_F
     }
 
     hyd.role->mf_agent_srv() = agent_service_uuid;
+    hyd.role->mf_dc_since() = steady_time::max();
     hyd.role->on_connect();
 
     response.try_emplace(&"roid", hyd.roinfo.roid);
@@ -473,7 +475,8 @@ do_star_role_on_client_request(const shptr<Implementation>& impl, ::poseidon::Ab
   }
 
 void
-do_star_clock_set_virtual_offset(const shptr<Implementation>& /*impl*/, ::poseidon::Abstract_Fiber& /*fiber*/,
+do_star_clock_set_virtual_offset(const shptr<Implementation>& /*impl*/,
+                                 ::poseidon::Abstract_Fiber& /*fiber*/,
                                  const ::poseidon::UUID& /*request_service_uuid*/,
                                  ::taxon::V_object& response, const ::taxon::V_object& request)
   {
