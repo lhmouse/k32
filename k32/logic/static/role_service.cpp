@@ -131,6 +131,8 @@ do_save_timer_callback(const shptr<Implementation>& impl,
         };
 
       cow_uuid_dictionary<Agent_Request> agent_requests;
+      bool something_wrong = false;
+
       for(const auto& r : impl->hyd_roles)
         if(r.second.role->agent_service_uuid() != ::poseidon::UUID()) {
           auto& ar = agent_requests.open(r.second.role->agent_service_uuid());
@@ -150,10 +152,10 @@ do_save_timer_callback(const shptr<Implementation>& impl,
         fiber.yield(it->second.srv_q);
 
         for(const auto& resp : it->second.srv_q->responses()) {
-          // If a user is on their original agent with the same role, then they
-          // are not expired.
           auto ptr = resp.obj.ptr(&"roles");
-          if(ptr && ptr->is_object())
+          if(ptr && ptr->is_object()) {
+            // If a user is on their original agent with the same role, then
+            // they are not expired.
             for(const auto& rr : ptr->as_object())
               if(rr.second.is_object()
                   && (rr.second.as_object().at(&"roid").as_integer()
@@ -161,6 +163,9 @@ do_save_timer_callback(const shptr<Implementation>& impl,
                   && (::poseidon::UUID(rr.second.as_object().at(&"logic_srv").as_string())
                       == service.service_uuid()))
                 it->second.roids_by_username.erase(rr.first);
+          }
+          else
+            something_wrong = true;
         }
 
         for(const auto& rr : it->second.roids_by_username) {
@@ -174,10 +179,23 @@ do_save_timer_callback(const shptr<Implementation>& impl,
           hyd.role->mf_agent_srv() = ::poseidon::UUID();
           hyd.role->mf_dc_since() = now;
           hyd.role->on_disconnect();
+        }
+      }
 
-          do_store_role_into_redis(fiber, hyd, impl->redis_role_ttl);
-          impl->hyd_roles.find_and_assign(rr.second, hyd);
-          do_flush_role_to_mysql(fiber, hyd);
+      if(something_wrong) {
+        POSEIDON_LOG_WARN(("An agent service has gone away. Flushing all roles now."));
+
+        // It's likely that application is shutting down, so enqueue all roles
+        // for writing. This is like the normal periodical loop below except
+        // that buckets are not rotated.
+        impl->save_buckets.clear();
+        impl->save_buckets.emplace_back();
+
+        for(const auto& r : impl->hyd_roles) {
+          auto first_bucket = impl->save_buckets.begin();
+          if(first_bucket->size() >= first_bucket->capacity())
+            first_bucket = impl->save_buckets.emplace(first_bucket);
+          first_bucket->push_back(r.first);
         }
       }
     }
