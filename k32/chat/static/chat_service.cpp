@@ -244,7 +244,7 @@ do_save_timer_callback(const shptr<Implementation>& impl,
         impl->save_buckets.splice(impl->save_buckets.end(), impl->save_buckets, current_bucket);
         if(current_bucket->size() >= current_bucket->capacity()) {
           ptrdiff_t sp = static_cast<ptrdiff_t>(current_bucket->capacity() / 2);
-          impl->save_buckets.emplace_back(current_bucket->begin(), current_bucket->begin() + sp);
+          impl->save_buckets.emplace_back(current_bucket->move_begin(), current_bucket->move_begin() + sp);
           current_bucket->erase(current_bucket->begin(), current_bucket->begin() + sp);
         }
         current_bucket->push_back(r.first);
