@@ -206,6 +206,20 @@ do_star_role_create(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
                     const ::poseidon::UUID& /*request_service_uuid*/,
                     ::taxon::V_object& response, const ::taxon::V_object& request)
   {
+    // * Request Parameters
+    //   - `roid` <sub>integer</sub> : Unique ID of role to create.
+    //   - `nickname` <sub>string</sub> : Nickname of new role.
+    //   - `username` <sub>string</sub> : Owner of new role.
+    //
+    // * Response Parameters
+    //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+    //
+    // * Description
+    //   Creates a new role in the _default_ database. By design，the caller should
+    //   call `*nickname/acquire` first to acquire ownership of `nickname`, then pass
+    //   `serial` as `roid`. After a role is created, it will be loaded into Redis
+    //   automatically.
+
     ////////////////////////////////////////////////////////////
     //
     int64_t roid = request.at(&"roid").as_integer();
