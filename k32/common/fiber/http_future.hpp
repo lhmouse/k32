@@ -22,10 +22,10 @@ class HTTP_Future
     cow_string m_resp_payload;
 
   public:
+    explicit HTTP_Future(const cow_string& req_uri);
+
     HTTP_Future(const cow_string& req_uri, const cow_string& req_content_type,
                 const cow_string& req_payload);
-
-    explicit HTTP_Future(const cow_string& req_uri);
 
   private:
     virtual
