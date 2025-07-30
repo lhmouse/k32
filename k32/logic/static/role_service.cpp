@@ -392,7 +392,7 @@ do_star_role_reconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_F
   }
 
 void
-do_star_role_disconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
+do_star_role_disconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
                         const ::poseidon::UUID& /*request_service_uuid*/,
                         ::taxon::V_object& response, const ::taxon::V_object& request)
   {
