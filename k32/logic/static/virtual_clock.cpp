@@ -44,13 +44,12 @@ do_star_virtual_clock_set_offset(const shptr<Implementation>& impl,
     response.try_emplace(&"status", &"gs_ok");
   }
 
-template<typename xImplementation>
 struct timespec
-do_get_virtual_timespec(const shptr<xImplementation>& impl)
+do_get_virtual_timespec(::time_t offset)
   {
     struct timespec ts;
     ::clock_gettime(CLOCK_REALTIME, &ts);
-    ts.tv_sec += impl->offset;
+    ts.tv_sec += offset;
     return ts;
   }
 
@@ -77,7 +76,7 @@ get_time_t()
     if(!this->m_impl)
       return 0;
 
-    auto ts = do_get_virtual_timespec(this->m_impl);
+    auto ts = do_get_virtual_timespec(this->m_impl->offset);
     return ts.tv_sec;
   }
 
@@ -89,7 +88,7 @@ get_double_time_t()
     if(!this->m_impl)
       return 0;
 
-    auto ts = do_get_virtual_timespec(this->m_impl);
+    auto ts = do_get_virtual_timespec(this->m_impl->offset);
     return static_cast<double>(ts.tv_sec) + static_cast<double>(ts.tv_nsec) * 1.0e-9;
   }
 
@@ -101,7 +100,7 @@ get_system_time()
     if(!this->m_impl)
       return system_time();
 
-    auto ts = do_get_virtual_timespec(this->m_impl);
+    auto ts = do_get_virtual_timespec(this->m_impl->offset);
     return system_clock::from_time_t(ts.tv_sec) + nanoseconds(ts.tv_nsec);
   }
 
@@ -113,7 +112,7 @@ get_system_time_fields()
     if(!this->m_impl)
       return Clock_Fields();
 
-    auto ts = do_get_virtual_timespec(this->m_impl);
+    auto ts = do_get_virtual_timespec(this->m_impl->offset);
     if(ROCKET_UNEXPECT(ts.tv_sec != this->m_impl->cached_fields_ts)) {
       ::tm tm;
       ::localtime_r(&(ts.tv_sec), &tm);
