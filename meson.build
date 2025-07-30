@@ -98,8 +98,7 @@ shared_module('k32_logic',
     cpp_pch: 'k32/xprecompiled.hpp',
     sources: [
       'k32/logic/globals.cpp', 'k32/logic/static/virtual_clock.cpp',
-      'k32/logic/hydrated/role_basic_information.cpp', 'k32/logic/hydrated/role.cpp',
-      'k32/logic/static/role_service.cpp',
+       'k32/logic/hydrated/role.cpp', 'k32/logic/static/role_service.cpp',
     ],
     link_with: lib_common,
     install: true)
