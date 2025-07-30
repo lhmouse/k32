@@ -126,10 +126,11 @@ get_system_time_fields()
       this->m_impl->cached_fields.hour = tm.tm_hour;
       this->m_impl->cached_fields.minute = tm.tm_min;
       this->m_impl->cached_fields.second = tm.tm_sec;
+      this->m_impl->cached_fields.milliseconds = 0;
       this->m_impl->cached_fields.tz_offset = static_cast<int32_t>(tm.tm_gmtoff) / 60000;
       this->m_impl->cached_fields.dst = tm.tm_isdst > 0;
       this->m_impl->cached_fields.day_of_week = tm.tm_wday + 1;
-      this->m_impl->cached_fields.milliseconds = 0;
+      this->m_impl->cached_fields.reserved = 0;
       this->m_impl->cached_fields_ts = ts.tv_sec;
     }
     this->m_impl->cached_fields.milliseconds = static_cast<uint32_t>(ts.tv_nsec) / 1000000;
