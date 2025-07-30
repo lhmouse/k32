@@ -6,8 +6,8 @@
 #include <poseidon/base/config_file.hpp>
 namespace k32::logic {
 
-Clock clock;
 Service service;
+Virtual_Clock virtual_clock;
 Role_Service role_service;
 
 }  // namespace k32::logic
@@ -20,6 +20,7 @@ poseidon_module_main(void)
   {
     ::poseidon::Config_File conf_file(&"k32.conf");
     service.reload(conf_file, &"logic");
+    virtual_clock.reload(conf_file);
     role_service.reload(conf_file);
 
 

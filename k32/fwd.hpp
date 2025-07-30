@@ -42,7 +42,7 @@ struct Clock_Fields
     uint32_t second        :  6;  //    0 - 60 (leap)
     uint32_t milliseconds  : 10;  //    0 - 999
     int32_t tz_offset      : 10;  // -720 - 720
-    uint32_t dst           :  1;  // daylight saving time
+    uint32_t dst           :  1;  // daylight saving time in effect
     uint32_t day_of_week   :  3;  //    1 - 7
     uint32_t reserved      :  2;
   };

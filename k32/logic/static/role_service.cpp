@@ -480,33 +480,6 @@ do_star_role_on_client_request(const shptr<Implementation>& impl, ::poseidon::Ab
   }
 
 void
-do_star_clock_set_virtual_offset(const shptr<Implementation>& /*impl*/,
-                                 ::poseidon::Abstract_Fiber& /*fiber*/,
-                                 const ::poseidon::UUID& /*request_service_uuid*/,
-                                 ::taxon::V_object& response, const ::taxon::V_object& request)
-  {
-    // * Request Parameters
-    //   - `offset` <sub>integer</sub> : Virtual offset in seconds.
-    //
-    // * Response Parameters
-    //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
-    //
-    // * Description
-    //   Sets virtual offset of the logic clock.
-
-    ////////////////////////////////////////////////////////////
-    //
-    int64_t offset = request.at(&"offset").as_integer();
-    POSEIDON_CHECK((offset >= -999999999) && (offset <= +999999999));
-
-    ////////////////////////////////////////////////////////////
-    //
-    clock.set_virtual_offset(seconds(static_cast<int>(offset)));
-
-    response.try_emplace(&"status", &"gs_ok");
-  }
-
-void
 do_every_second_timer_callback(const shptr<Implementation>& impl,
                                const shptr<::poseidon::Abstract_Timer>& /*timer*/,
                                ::poseidon::Abstract_Fiber& /*fiber*/, steady_time /*now*/)
@@ -614,7 +587,6 @@ reload(const ::poseidon::Config_File& conf_file)
     service.set_handler(&"*role/reconnect", bindw(this->m_impl, do_star_role_reconnect));
     service.set_handler(&"*role/disconnect", bindw(this->m_impl, do_star_role_disconnect));
     service.set_handler(&"*role/on_client_request", bindw(this->m_impl, do_star_role_on_client_request));
-    service.set_handler(&"*clock/set_virtual_offset", bindw(this->m_impl, do_star_clock_set_virtual_offset));
 
     // Restart the service.
     this->m_impl->save_timer.start(3001ms, bindw(this->m_impl, do_save_timer_callback));

@@ -25,7 +25,7 @@
    3. [`*role/reconnect`](#rolereconnect)
    4. [`*role/disconnect`](#roledisconnect)
    5. [`*role/on_client_request`](#roleon_client_request)
-   6. [`*clock/set_virtual_offset`](#clockset_virtual_offset)
+   6. [`*virtual_clock/set_offset`](#virtual_clockset_offset)
 
 ## General Status Codes
 
@@ -422,18 +422,18 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*clock/set_virtual_offset`
+### `*virtual_clock/set_offset`
 
 * Service Type
   - `"logic"`
 
 * Request Parameters
-  - `offset` <sub>integer</sub> : Virtual offset in seconds.
+  - `offset` <sub>integer</sub> : Offset in seconds.
 
 * Response Parameters
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
 
 * Description
-  Sets virtual offset of the logic clock.
+  Sets offset of the virtual clock.
 
 [back to table of contents](#table-of-contents)
