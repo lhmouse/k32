@@ -180,7 +180,7 @@ do_save_timer_callback(const shptr<Implementation>& impl,
 
           if(agent_down) {
             // It's likely that the application is being shut down, so flush all
-            //  roles immediately.
+            // roles immediately.
             do_store_role_into_redis(fiber, hyd, impl->redis_role_ttl);
             impl->hyd_roles.find_and_assign(rr.second, hyd);
             do_flush_role_to_mysql(fiber, hyd);
