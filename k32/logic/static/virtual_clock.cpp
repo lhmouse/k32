@@ -44,8 +44,9 @@ do_star_virtual_clock_set_offset(const shptr<Implementation>& impl,
     response.try_emplace(&"status", &"gs_ok");
   }
 
+template<typename xImplementation>
 struct timespec
-do_get_virtual_timespec(const shptr<Implementation>& impl)
+do_get_virtual_timespec(const shptr<xImplementation>& impl)
   {
     struct timespec ts;
     ::clock_gettime(CLOCK_REALTIME, &ts);
