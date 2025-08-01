@@ -76,17 +76,15 @@ do_set_service_uuid(::poseidon::TCP_Socket& socket, const ::poseidon::UUID& serv
 void
 do_salt_password(char* pw, const ::poseidon::UUID& s, int64_t ts, const cow_string& password)
   {
+    uint8_t bytes[16];
     ::MD5_CTX ctx;
     ::MD5_Init(&ctx);
-
     ::MD5_Update(&ctx, s.data(), s.size());
-    uint64_t be = ROCKET_HTOBE64(static_cast<uint64_t>(ts));
-    ::MD5_Update(&ctx, &be, 8);
+    ROCKET_STORE_BE64(bytes, static_cast<uint64_t>(ts));
+    ::MD5_Update(&ctx, bytes, 8);
     ::MD5_Update(&ctx, password.data(), password.size());
-
-    uint8_t checksum[16];
-    ::MD5_Final(checksum, &ctx);
-    ::poseidon::hex_encode_16_partial(pw, checksum);
+    ::MD5_Final(bytes, &ctx);
+    ::poseidon::hex_encode_16_partial(pw, bytes);
   }
 
 void
