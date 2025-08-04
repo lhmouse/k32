@@ -76,16 +76,19 @@ do_star_chat_check_threads(const shptr<Implementation>& impl, ::poseidon::Abstra
                            ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
+    //
     //   - `thread_key_list` <sub>array of strings</sub> : List of threads to check.
     //   - `last_check_time` <sub>timestamp, optional</sub> : Timestamp of last check.
     //
     // * Response Parameters
+    //
     //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
     //   - `raw_payload_list` <sub>array of strings</sub> : Message payloads, encoded
     //     in JSON and sorted by time of creation.
     //   - `check_time` <sub>timestamp</sub> : Timestamp of last check.
     //
     // * Description
+    //
     //   Retrieves messages from all threads in `thread_key_list`. If `last_check_time`
     //   is specified, only messages whose timestamps are _greater than_ `last_check_time`
     //   are returned.
@@ -158,13 +161,16 @@ do_star_chat_save_message(const shptr<Implementation>& impl, ::poseidon::Abstrac
                           ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
+    //
     //   - `"thread_key"` <sub>string</sub> : Key of thread to append new message.
     //   - `"raw_payload"` <sub>string</sub> : Message payload, encoded in JSON.
     //
     // * Response Parameters
+    //
     //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
     //
     // * Description
+    //
     //   Appends a new message to the end of `thread_key`.
 
     ////////////////////////////////////////////////////////////

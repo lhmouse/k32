@@ -243,14 +243,17 @@ do_star_role_login(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber
                    ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
+    //
     //   - `roid` <sub>integer</sub> : ID of role to load.
     //   - `agent_srv` <sub>string</sub> : UUID of _agent_ that holds client connection.
     //   - `monitor_srv` <sub>string</sub> : UUID of _monitor_ that holds client data.
     //
     // * Response Parameters
+    //
     //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
     //
     // * Description
+    //
     //   Loads a role from Redis and triggers a _login_ event. If the role has not been
     //   loaded into Redis, this operation fails.
 
@@ -324,12 +327,15 @@ do_star_role_logout(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
                     ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
+    //
     //   - `roid` <sub>integer</sub> : ID of role to unload.
     //
     // * Response Parameters
+    //
     //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
     //
     // * Description
+    //
     //   Triggers a _logout_ event, writes the role back to Redis, and unloads it.
 
     ////////////////////////////////////////////////////////////
@@ -396,12 +402,15 @@ do_star_role_disconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_
                         ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
+    //
     //   - `roid` <sub>integer</sub> : ID of role to disconnect.
     //
     // * Response Parameters
+    //
     //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
     //
     // * Description
+    //
     //   Triggers a _disconnect_ event.
 
     ////////////////////////////////////////////////////////////
@@ -431,15 +440,18 @@ do_star_role_on_client_request(const shptr<Implementation>& impl, ::poseidon::Ab
                                ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
+    //
     //   - `roid` <sub>integer</sub> : ID of role on this client.
     //   - `client_opcode` <sub>string</sub> : Opcode from client.
     //   - `client_req` <sub>object, optional</sub> : Additional data for this opcode.
     //
     // * Response Parameters
+    //
     //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
     //   - `client_resp` <sub>object, optional</sub> : Additional response data.
     //
     // * Description
+    //
     //   Handles a request message from a client.
 
     ////////////////////////////////////////////////////////////

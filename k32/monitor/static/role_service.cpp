@@ -128,14 +128,17 @@ do_star_role_list(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber&
                   ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
+    //
     //   - `roid` <sub>integer</sub> : Unique ID of role to create.
     //   - `nickname` <sub>string</sub> : Nickname of new role.
     //   - `username` <sub>string</sub> : Owner of new role.
     //
     // * Response Parameters
+    //
     //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
     //
     // * Description
+    //
     //   Creates a new role in the _default_ database. By design，the caller should
     //   call `*nickname/acquire` first to acquire ownership of `nickname`, then pass
     //   `serial` as `roid`. After a role is created, it will be loaded into Redis
@@ -207,14 +210,17 @@ do_star_role_create(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
                     ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
+    //
     //   - `roid` <sub>integer</sub> : Unique ID of role to create.
     //   - `nickname` <sub>string</sub> : Nickname of new role.
     //   - `username` <sub>string</sub> : Owner of new role.
     //
     // * Response Parameters
+    //
     //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
     //
     // * Description
+    //
     //   Creates a new role in the _default_ database. By design，the caller should
     //   call `*nickname/acquire` first to acquire ownership of `nickname`, then pass
     //   `serial` as `roid`. After a role is created, it will be loaded into Redis
@@ -316,12 +322,15 @@ do_star_role_load(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber&
                   ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
+    //
     //   - `roid` <sub>integer</sub> : ID of role to load.
     //
     // * Response Parameters
+    //
     //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
     //
     // * Description
+    //
     //   Loads a role from the _default_ database into Redis. The monitor keeps track
     //   of roles that have been loaded by itself, and periodically writes snapshots
     //   from Redis back into the database.
@@ -427,12 +436,15 @@ do_star_role_unload(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
                     ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
+    //
     //   - `roid` <sub>integer</sub> : ID of role to unload.
     //
     // * Response Parameters
+    //
     //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
     //
     // * Description
+    //
     //   Writes a role back into the database and unloads it from Redis.
 
     ////////////////////////////////////////////////////////////
@@ -510,12 +522,15 @@ do_star_role_flush(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber
                    ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
+    //
     //   - `roid` <sub>integer</sub> : ID of role to flush.
     //
     // * Response Parameters
+    //
     //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
     //
     // * Description
+    //
     //   Writes a role back into the database.
 
     ////////////////////////////////////////////////////////////

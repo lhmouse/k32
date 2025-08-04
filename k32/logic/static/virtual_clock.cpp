@@ -23,12 +23,15 @@ do_star_virtual_clock_set_offset(const shptr<Implementation>& impl,
                                  ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
+    //
     //   - `offset` <sub>integer</sub> : Offset in seconds.
     //
     // * Response Parameters
+    //
     //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
     //
     // * Description
+    //
     //   Sets offset of the virtual clock.
 
     ////////////////////////////////////////////////////////////
