@@ -87,7 +87,7 @@ do_star_chat_check_threads(const shptr<Implementation>& impl, ::poseidon::Abstra
     //
     // * Description
     //   Retrieves messages from all threads in `thread_key_list`. If `last_check_time`
-    //   is specified, only messages whose timestamp is _greater than_ `last_check_time`
+    //   is specified, only messages whose timestamps are _greater than_ `last_check_time`
     //   are returned.
 
     ////////////////////////////////////////////////////////////
