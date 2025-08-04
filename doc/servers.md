@@ -56,17 +56,21 @@ strings:
 ### `*user/kick`
 
 * Service Type
+
   - `"agent"`
 
 * Request Parameters
+
   - `username` <sub>string</sub> : Name of user to kick.
   - `ws_status` <sub>integer, optional</sub> : WebSocket status code.
   - `reason` <sub>string, optional</sub> : Additional reason string.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
 
 * Description
+
   Terminates the connection from a user, by sending a WebSocket closure
   notification of `ws_status` and `reason`. The default value for `ws_status` is
   `1008` (_Policy Violation_).
@@ -76,12 +80,15 @@ strings:
 ### `*user/check_roles`
 
 * Service Type
+
   - `"agent"`
 
 * Request Parameters
+
   - `username_list` <sub>array of strings</sub> : List of users.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
   - `roles` <sub>object of objects</sub> : Users and their roles.
     - _key_ <sub>string</sub> : Username.
@@ -89,6 +96,7 @@ strings:
     - `logic_srv` <sub>string, optional</sub> : Current logic service UUID.
 
 * Description
+
   Gets role statistics of all users in `username_list`.
 
 [back to table of contents](#table-of-contents)
@@ -96,18 +104,22 @@ strings:
 ### `*user/push_message`
 
 * Service Type
+
   - `"agent"`
 
 * Request Parameters
+
   - `username` <sub>strings, optional</sub> : A single target user.
   - `username_list` <sub>array of strings, optional</sub> : List of target users.
   - `client_opcode` <sub>string</sub> : Opcode to send to clients.
   - `client_data` <sub>object, optional</sub> : Additional data for this opcode.
 
 * Response Parameters
+
   - _None_
 
 * Description
+
   Sends a message to all clients in `username` and `username_list`. If a user is
   not online on this service, they are silently ignored.
 
@@ -116,15 +128,19 @@ strings:
 ### `*user/reload_relay_conf`
 
 * Service Type
+
   - `"agent"`
 
 * Request Parameters
+
   - _None_
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
 
 * Description
+
   Reloads relay rules for client opcodes from `relay.conf`.
 
 [back to table of contents](#table-of-contents)
@@ -132,16 +148,20 @@ strings:
 ### `*user/ban/set`
 
 * Service Type
+
   - `"agent"`
 
 * Request Parameters
+
   - `username` <sub>string</sub> : Name of user to ban.
   - `until` <sub>timestamp</sub> : Ban in effect until this time point.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
 
 * Description
+
   Sets a ban on a user until a given time point. If the user is online, they are
   kicked with `reason`.
 
@@ -150,15 +170,19 @@ strings:
 ### `*user/ban/lift`
 
 * Service Type
+
   - `"agent"`
 
 * Request Parameters
+
   - `username` <sub>string</sub> : Name of user to ban.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
 
 * Description
+
   Lifts a ban on a user.
 
 [back to table of contents](#table-of-contents)
@@ -166,17 +190,21 @@ strings:
 ### `*nickname/acquire`
 
 * Service Type
+
   - `"agent"`
 
 * Request Parameters
+
   - `nickname` <sub>string</sub> : Nickname to acquire.
   - `username` <sub>string</sub> : Owner of new nickname.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
   - `serial` <sub>integer, optional</sub> : Serial number of new nickname.
 
 * Description
+
   Attempts to acquire ownership of a nickname and returns its serial number.
   Both the nickname and the serial number are unique within the _user_ database.
   If the nickname already exists under the same username, the old serial
@@ -188,15 +216,19 @@ strings:
 ### `*nickname/release`
 
 * Service Type
+
   - `"agent"`
 
 * Request Parameters
+
   - `nickname` <sub>string</sub> : Nickname to release.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
 
 * Description
+
   Releases ownership of a nickname so it can be re-acquired by others.
 
 [back to table of contents](#table-of-contents)
@@ -206,19 +238,23 @@ strings:
 ### `*chat/load_messages_by_thread`
 
 * Service Type
+
   - `"chat"`
 
 * Request Parameters
+
   - `thread_key_list` <sub>array of strings</sub> : List of threads to check.
   - `last_check_time` <sub>timestamp, optional</sub> : Timestamp of last check.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
   - `raw_payload_list` <sub>array of strings</sub> : Message payloads, encoded
     in JSON and sorted by time of creation.
   - `check_time` <sub>timestamp</sub> : Timestamp of last check.
 
 * Description
+
   Retrieves messages from all threads in `thread_key_list`. If `last_check_time`
   is specified, only messages whose timestamp is _greater than_ `last_check_time`
   are returned.
@@ -226,16 +262,20 @@ strings:
 ### `*chat/save_message`
 
 * Service Type
+
   - `"chat"`
 
 * Request Parameters
+
   - `"thread_key"` <sub>string</sub> : Key of thread to append new message.
   - `"raw_payload"` <sub>string</sub> : Message payload, encoded in JSON.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
 
 * Description
+
   Appends a new message to the end of `thread_key`.
 
 ## Monitor Service Opcodes
@@ -243,18 +283,22 @@ strings:
 ### `*role/list`
 
 * Service Type
+
   - `"monitor"`
 
 * Request Parameters
+
   - `username` <sub>string</sub> : Owner of roles to list.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
   - `raw_avatars` <sub>object of strings</sub> : Roles that have been found.
     - _key_ <sub>string</sub> : Role ID as decimal string.
     - _value_ <sub>string</sub> : Raw avatar data, encoded in JSON.
 
 * Description
+
   Searches the _default_ database for all roles that belong to `username`, and
   returns their avatars. The result is not cached.
 
@@ -263,17 +307,21 @@ strings:
 ### `*role/create`
 
 * Service Type
+
   - `"monitor"`
 
 * Request Parameters
+
   - `roid` <sub>integer</sub> : Unique ID of role to create.
   - `nickname` <sub>string</sub> : Nickname of new role.
   - `username` <sub>string</sub> : Owner of new role.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
 
 * Description
+
   Creates a new role in the _default_ database. By design，the caller should
   call `*nickname/acquire` first to acquire ownership of `nickname`, then pass
   `serial` as `roid`. After a role is created, it will be loaded into Redis
@@ -284,15 +332,19 @@ strings:
 ### `*role/load`
 
 * Service Type
+
   - `"monitor"`
 
 * Request Parameters
+
   - `roid` <sub>integer</sub> : ID of role to load.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
 
 * Description
+
   Loads a role from the _default_ database into Redis. The monitor keeps track
   of roles that have been loaded by itself, and periodically writes snapshots
   from Redis back into the database.
@@ -302,15 +354,19 @@ strings:
 ### `*role/unload`
 
 * Service Type
+
   - `"monitor"`
 
 * Request Parameters
+
   - `roid` <sub>integer</sub> : ID of role to unload.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
 
 * Description
+
   Writes a role back into the database and unloads it from Redis.
 
 [back to table of contents](#table-of-contents)
@@ -318,15 +374,19 @@ strings:
 ### `*role/flush`
 
 * Service Type
+
   - `"monitor"`
 
 * Request Parameters
+
   - `roid` <sub>integer</sub> : ID of role to flush.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
 
 * Description
+
   Writes a role back into the database.
 
 [back to table of contents](#table-of-contents)
@@ -336,17 +396,21 @@ strings:
 ### `*role/login`
 
 * Service Type
+
   - `"logic"`
 
 * Request Parameters
+
   - `roid` <sub>integer</sub> : ID of role to load.
   - `agent_srv` <sub>string</sub> : UUID of _agent_ that holds client connection.
   - `monitor_srv` <sub>string</sub> : UUID of _monitor_ that holds client data.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
 
 * Description
+
   Loads a role from Redis and triggers a _login_ event. If the role has not been
   loaded into Redis, this operation fails.
 
@@ -355,15 +419,19 @@ strings:
 ### `*role/logout`
 
 * Service Type
+
   - `"logic"`
 
 * Request Parameters
+
   - `roid` <sub>integer</sub> : ID of role to unload.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
 
 * Description
+
   Triggers a _logout_ event, writes the role back to Redis, and unloads it.
 
 [back to table of contents](#table-of-contents)
@@ -371,17 +439,21 @@ strings:
 ### `*role/reconnect`
 
 * Service Type
+
   - `"logic"`
 
 * Request Parameters
+
   - `roid_list` <sub>array of integers</sub> : List of IDs of roles to check.
   - `agent_srv` <sub>string</sub> : UUID of _agent_ that holds client connection.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
   - `roid` <sub>integer</sub> : ID of role that has reconnected.
 
 * Description
+
   If a role in `roid_list` has been loaded, triggers a _reconnect_ event.
   Otherwise no role is loaded, and an error is returned.
 
@@ -390,15 +462,19 @@ strings:
 ### `*role/disconnect`
 
 * Service Type
+
   - `"logic"`
 
 * Request Parameters
+
   - `roid` <sub>integer</sub> : ID of role to disconnect.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
 
 * Description
+
   Triggers a _disconnect_ event.
 
 [back to table of contents](#table-of-contents)
@@ -406,18 +482,22 @@ strings:
 ### `*role/on_client_request`
 
 * Service Type
+
   - `"logic"`
 
 * Request Parameters
+
   - `roid` <sub>integer</sub> : ID of role on this client.
   - `client_opcode` <sub>string</sub> : Opcode from client.
   - `client_req` <sub>object, optional</sub> : Additional data for this opcode.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
   - `client_resp` <sub>object, optional</sub> : Additional response data.
 
 * Description
+
   Handles a request message from a client.
 
 [back to table of contents](#table-of-contents)
@@ -425,15 +505,19 @@ strings:
 ### `*virtual_clock/set_offset`
 
 * Service Type
+
   - `"logic"`
 
 * Request Parameters
+
   - `offset` <sub>integer</sub> : Offset in seconds.
 
 * Response Parameters
+
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
 
 * Description
+
   Sets offset of the virtual clock.
 
 [back to table of contents](#table-of-contents)
