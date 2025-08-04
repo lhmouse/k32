@@ -268,8 +268,7 @@ do_star_role_login(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber
     ////////////////////////////////////////////////////////////
     //
     Hydrated_Role hyd;
-    impl->hyd_roles.find_and_copy(hyd, roid);
-    if(!hyd.role) {
+    if(!impl->hyd_roles.find_and_copy(hyd, roid)) {
       // Load role from Redis.
       cow_vector<cow_string> redis_cmd;
       redis_cmd.emplace_back(&"GETEX");
