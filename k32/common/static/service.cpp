@@ -80,7 +80,7 @@ do_salt_password(char* pw, const ::poseidon::UUID& s, int64_t ts, const cow_stri
     ::MD5_CTX ctx;
     ::MD5_Init(&ctx);
     ::MD5_Update(&ctx, s.data(), s.size());
-    ROCKET_STORE_BE64(bytes, static_cast<uint64_t>(ts));
+    ::rocket::store_be(bytes, static_cast<uint64_t>(ts));
     ::MD5_Update(&ctx, bytes, 8);
     ::MD5_Update(&ctx, password.data(), password.size());
     ::MD5_Final(bytes, &ctx);
