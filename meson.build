@@ -22,6 +22,7 @@ project('k32',
 #===========================================================
 # Configuration
 #===========================================================
+
 cxx = meson.get_compiler('cpp')
 cxx_is_i386 = cxx.has_define('__i386__')
 cxx_is_amd64 = cxx.has_define('__amd64__')
@@ -45,7 +46,7 @@ add_project_arguments(
       '-masm=intel', '-msse4.1', '-fno-ident', '-fno-devirtualize-speculatively',
       '-fimplicit-constexpr', '-Wsuggest-attribute=noreturn', '-Wno-option-ignored',
       '-Wno-unused-command-line-argument', '-Wno-unqualified-std-cast-call',
-      '-Wno-string-plus-int', '-Wno-bitwise-instead-of-logical'),
+      '-Wno-bitwise-instead-of-logical'),
     language: 'cpp')
 
 if get_option('enable-avx2') and (cxx_is_i386 or cxx_is_amd64)
@@ -59,6 +60,7 @@ endif
 #===========================================================
 # Modules
 #===========================================================
+
 lib_common = static_library('common',
     cpp_pch: 'k32/xprecompiled.hpp',
     sources: [
