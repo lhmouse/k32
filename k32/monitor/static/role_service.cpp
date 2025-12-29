@@ -507,6 +507,8 @@ do_star_role_unload(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
       task2 = new_sh<::poseidon::Redis_Query_Future>(::poseidon::redis_connector, redis_cmd);
       ::poseidon::task_scheduler.launch(task2);
       fiber.yield(task2);
+
+      // Check whether the value was unchanged in between and has been deleted.
     } while(!task2->result().is_nil());
     impl->role_records.erase(roid);
 
