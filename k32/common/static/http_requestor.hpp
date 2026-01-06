@@ -1,5 +1,5 @@
 // This file is part of k32.
-// Copyright (C) 2024-2025, LH_Mouse. All wrongs reserved.
+// Copyright (C) 2024-2026 LH_Mouse. All wrongs reserved.
 
 #ifndef K32_COMMON_STATIC_HTTP_REQUESTOR_
 #define K32_COMMON_STATIC_HTTP_REQUESTOR_

@@ -1,5 +1,5 @@
 // This file is part of k32.
-// Copyright (C) 2024-2025, LH_Mouse. All wrongs reserved.
+// Copyright (C) 2024-2026 LH_Mouse. All wrongs reserved.
 
 #ifndef K32_FWD_
 #define K32_FWD_

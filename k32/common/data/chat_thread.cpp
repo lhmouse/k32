@@ -1,5 +1,5 @@
 // This file is part of k32.
-// Copyright (C) 2024-2025, LH_Mouse. All wrongs reserved.
+// Copyright (C) 2024-2026 LH_Mouse. All wrongs reserved.
 
 #include "../../xprecompiled.hpp"
 #define K32_FRIENDS_A40BD99F_5E7D_486F_A905_656CBDBE52AB_
