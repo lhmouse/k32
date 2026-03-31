@@ -1,10 +1,6 @@
 // This file is part of k32.
 // Copyright (C) 2024-2026 LH_Mouse. All wrongs reserved.
 
-#ifndef K32_XPRECOMPILED_
-#define K32_XPRECOMPILED_
-
-// Prevent use of standard streams.
 #define _IOS_BASE_H  1
 #define _STREAM_ITERATOR_H  1
 #define _STREAMBUF_ITERATOR_H  1
@@ -71,5 +67,3 @@
 #include <x86intrin.h>
 #include <nmmintrin.h>
 #include <immintrin.h>
-
-#endif
