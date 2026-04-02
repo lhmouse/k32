@@ -80,7 +80,7 @@ do_salt_password(char* pw, const ::poseidon::UUID& s, int64_t ts, const cow_stri
     ::MD5_CTX ctx;
     ::MD5_Init(&ctx);
     ::MD5_Update(&ctx, s.data(), s.size());
-    ::rocket::store_be(bytes, static_cast<uint64_t>(ts));
+    ::asteria::store_be(bytes, static_cast<uint64_t>(ts));
     ::MD5_Update(&ctx, bytes, 8);
     ::MD5_Update(&ctx, password.data(), password.size());
     ::MD5_Final(bytes, &ctx);
@@ -602,7 +602,7 @@ do_publish_timer_callback(const shptr<Implementation>& impl,
     // Get all running network interfaces.
     ::poseidon::IPv6_Address addr = impl->private_server.local_address();
     if(addr.port() != 0) {
-      ::rocket::unique_ptr<::ifaddrs, vfn<::ifaddrs*>> guard(nullptr, ::freeifaddrs);
+      ::asteria::unique_ptr<::ifaddrs, vfn<::ifaddrs*>> guard(nullptr, ::freeifaddrs);
       ::ifaddrs* ifa = nullptr;
       if(::getifaddrs(&ifa) == 0)
         guard.reset(ifa);
@@ -830,7 +830,7 @@ reload(const ::poseidon::Config_File& conf_file, const cow_string& service_type)
 
     // Set up constants.
     if(this->m_impl->service_uuid.is_nil())
-      this->m_impl->service_uuid = ::poseidon::UUID::random();
+      this->m_impl->service_uuid = ::poseidon::UUID::random_v7();
 
     if(this->m_impl->appointment.index() == -1)
       this->m_impl->appointment.enroll(sformat("$1/$2.lock", lock_directory, service_type));
@@ -854,7 +854,7 @@ launch(const shptr<Service_Future>& req)
     bool all_received = true;
     for(size_t k = 0;  k != req->mf_responses().size();  ++k) {
       auto& resp = req->mf_responses().mut(k);
-      resp.request_uuid = ::poseidon::UUID::random();
+      resp.request_uuid = ::poseidon::UUID::random_v7();
 
       if(resp.service_uuid == this->m_impl->service_uuid) {
         // This is myself, so there's no need to send it over network.

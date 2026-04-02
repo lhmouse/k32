@@ -49,7 +49,7 @@ struct Clock_Fields
 
 // Callback helper
 template<typename xSelf, typename xOther, typename... xArgs>
-ROCKET_ALWAYS_INLINE
+ASTERIA_ALWAYS_INLINE
 shared_function<vfn<xArgs...>>
 bindw(const shptr<xSelf>& self, vfn<const shptr<xOther>&, xArgs...>* pfunc)
   {

@@ -16,6 +16,7 @@
 #include <poseidon/fiber/mysql_query_future.hpp>
 #include <poseidon/mysql/mysql_connection.hpp>
 #include <poseidon/static/mysql_connector.hpp>
+#include <asteria/rocket/ascii_numget.hpp>
 namespace k32::agent {
 namespace {
 
@@ -398,7 +399,7 @@ do_server_hws_callback(const shptr<Implementation>& impl,
             // Mind a fresh role (that has just been created but has not been
             // loaded yet), whose avatar is an empty string.
             int64_t roid = 0;
-            ::rocket::ascii_numget numg;
+            ::asteria::ascii_numget numg;
             POSEIDON_CHECK(numg.parse_DI(r.first.data(), r.first.length()) == r.first.length());
             numg.cast_I(roid, 0, INT64_MAX);
 

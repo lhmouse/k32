@@ -116,7 +116,7 @@ get_system_time_fields()
       return Clock_Fields();
 
     auto ts = do_get_virtual_timespec(this->m_impl->offset);
-    if(ROCKET_UNEXPECT(ts.tv_sec != this->m_impl->cached_fields_ts)) {
+    if(ASTERIA_UNEXPECT(ts.tv_sec != this->m_impl->cached_fields_ts)) {
       ::tm tm;
       ::localtime_r(&(ts.tv_sec), &tm);
 #pragma GCC diagnostic push

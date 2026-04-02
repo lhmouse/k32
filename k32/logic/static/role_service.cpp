@@ -49,7 +49,7 @@ do_store_role_into_redis(::poseidon::Abstract_Fiber& fiber, Hydrated_Role& hyd, 
   {
     POSEIDON_LOG_DEBUG(("Storing role `$1`: preparing data"), hyd.roinfo.roid);
 
-    ROCKET_ASSERT(hyd.roinfo.roid == hyd.role->roid());
+    ASTERIA_ASSERT(hyd.roinfo.roid == hyd.role->roid());
     hyd.roinfo.username = hyd.role->username();
     hyd.roinfo.nickname = hyd.role->nickname();
     hyd.roinfo.update_time = system_clock::now();
