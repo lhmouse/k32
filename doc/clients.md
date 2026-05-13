@@ -4,12 +4,12 @@
 2. [Connection Termination](#connection-termination)
 3. [Message Formats](#message-formats)
 4. [Client-to-Server Opcodes](#client-to-server-opcodes)
-   1. [`+role/create`](#rolecreate)
-   2. [`+role/login`](#rolelogin)
-   3. [`+role/logout`](#rolelogout)
+   1. [`req/role/create`](#reqrolecreate)
+   2. [`req/role/login`](#reqrolelogin)
+   3. [`req/role/logout`](#reqrolelogout)
 5. [Server-to-Client Opcodes](#server-to-client-opcodes)
-   1. [`=role/list`](#rolelist)
-   2. [`=role/login`](#rolelogin-1)
+   1. [`ntfy/role/list`](#ntfyrolelist)
+   2. [`ntfy/role/login`](#ntfyrolelogin)
 
 ## Connection Establishment
 
@@ -93,7 +93,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `+role/create`
+### `req/role/create`
 
 * Request Parameters
 
@@ -109,7 +109,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `+role/login`
+### `req/role/login`
 
 * Request Parameters
 
@@ -122,11 +122,11 @@ strings:
 * Description
 
   Selects a role to log into, which shall be one of the roles that were returned
-  in an earlier `=role/list` notification.
+  in an earlier `ntfy/role/list` notification.
 
 [back to table of contents](#table-of-contents)
 
-### `+role/logout`
+### `req/role/logout`
 
 * Request Parameters
 
@@ -144,7 +144,7 @@ strings:
 
 ## Server-to-Client Opcodes
 
-### `=role/list`
+### `ntfy/role/list`
 
 * Notification Parameters
   - `avatar_list` <sub>array of objects</sub> : List of available roles.
@@ -157,7 +157,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `=role/login`
+### `ntfy/role/login`
 
 * Notification Parameters
   - TODO

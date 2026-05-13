@@ -107,7 +107,7 @@ do_flush_role_to_mysql(::poseidon::Abstract_Fiber& fiber, Hydrated_Role& hyd)
     ::taxon::V_object tx_args;
     tx_args.try_emplace(&"roid", hyd.roinfo.roid);
 
-    auto srv_q = new_sh<Service_Future>(monitor_service_uuid, &"*role/flush", tx_args);
+    auto srv_q = new_sh<Service_Future>(monitor_service_uuid, &"monitor/role/flush", tx_args);
     service.launch(srv_q);
     fiber.yield(srv_q);
 
@@ -142,7 +142,7 @@ do_save_timer_callback(const shptr<Implementation>& impl,
         ::taxon::V_object tx_args;
         tx_args.try_emplace(&"username_list", it->second.username_list);
 
-        it->second.srv_q = new_sh<Service_Future>(it->first, &"*user/check_roles", tx_args);
+        it->second.srv_q = new_sh<Service_Future>(it->first, &"agent/user/check_roles", tx_args);
         service.launch(it->second.srv_q);
       }
 
@@ -238,9 +238,9 @@ do_save_timer_callback(const shptr<Implementation>& impl,
   }
 
 void
-do_star_role_login(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                   const ::poseidon::UUID& /*request_service_uuid*/,
-                   ::taxon::V_object& response, const ::taxon::V_object& request)
+do_role_login(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
+              const ::poseidon::UUID& /*request_service_uuid*/,
+              ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -322,7 +322,7 @@ do_star_role_login(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber
   }
 
 void
-do_star_role_logout(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
+do_role_logout(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
                     const ::poseidon::UUID& /*request_service_uuid*/,
                     ::taxon::V_object& response, const ::taxon::V_object& request)
   {
@@ -365,9 +365,9 @@ do_star_role_logout(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
   }
 
 void
-do_star_role_reconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
-                       const ::poseidon::UUID& /*request_service_uuid*/,
-                       ::taxon::V_object& response, const ::taxon::V_object& request)
+do_role_reconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
+                  const ::poseidon::UUID& /*request_service_uuid*/,
+                  ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     ::std::vector<int64_t> roid_list;
     for(const auto& r : request.at(&"roid_list").as_array()) {
@@ -397,9 +397,9 @@ do_star_role_reconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_F
   }
 
 void
-do_star_role_disconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
-                        const ::poseidon::UUID& /*request_service_uuid*/,
-                        ::taxon::V_object& response, const ::taxon::V_object& request)
+do_role_disconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
+                   const ::poseidon::UUID& /*request_service_uuid*/,
+                   ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -435,9 +435,9 @@ do_star_role_disconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_
   }
 
 void
-do_star_role_on_client_request(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                               const ::poseidon::UUID& /*request_service_uuid*/,
-                               ::taxon::V_object& response, const ::taxon::V_object& request)
+do_role_on_client_request(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
+                          const ::poseidon::UUID& /*request_service_uuid*/,
+                          ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -593,11 +593,11 @@ reload(const ::poseidon::Config_File& conf_file)
     this->m_impl->disconnect_to_logout_duration = disconnect_to_logout_duration;
 
     // Set up request handlers.
-    service.set_handler(&"*role/login", bindw(this->m_impl, do_star_role_login));
-    service.set_handler(&"*role/logout", bindw(this->m_impl, do_star_role_logout));
-    service.set_handler(&"*role/reconnect", bindw(this->m_impl, do_star_role_reconnect));
-    service.set_handler(&"*role/disconnect", bindw(this->m_impl, do_star_role_disconnect));
-    service.set_handler(&"*role/on_client_request", bindw(this->m_impl, do_star_role_on_client_request));
+    service.set_handler(&"logic/role/login", bindw(this->m_impl, do_role_login));
+    service.set_handler(&"logic/role/logout", bindw(this->m_impl, do_role_logout));
+    service.set_handler(&"logic/role/reconnect", bindw(this->m_impl, do_role_reconnect));
+    service.set_handler(&"logic/role/disconnect", bindw(this->m_impl, do_role_disconnect));
+    service.set_handler(&"logic/role/on_client_request", bindw(this->m_impl, do_role_on_client_request));
 
     // Restart the service.
     this->m_impl->save_timer.start(3001ms, bindw(this->m_impl, do_save_timer_callback));

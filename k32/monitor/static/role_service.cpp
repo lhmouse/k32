@@ -123,9 +123,9 @@ do_store_role_record_into_redis(::poseidon::Abstract_Fiber& fiber, Role_Record& 
   }
 
 void
-do_star_role_list(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                  const ::poseidon::UUID& /*request_service_uuid*/,
-                  ::taxon::V_object& response, const ::taxon::V_object& request)
+do_role_list(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
+             const ::poseidon::UUID& /*request_service_uuid*/,
+             ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -140,8 +140,8 @@ do_star_role_list(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber&
     // * Description
     //
     //   Creates a new role in the _default_ database. By design，the caller should
-    //   call `*nickname/acquire` first to acquire ownership of `nickname`, then pass
-    //   `serial` as `roid`. After a role is created, it will be loaded into Redis
+    //   call `agent/nickname/acquire` first to acquire ownership of `nickname`, then
+    //   pass `serial` as `roid`. After a role is created, it will be loaded into Redis
     //   automatically.
 
     ////////////////////////////////////////////////////////////
@@ -205,9 +205,9 @@ do_star_role_list(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber&
   }
 
 void
-do_star_role_create(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                    const ::poseidon::UUID& /*request_service_uuid*/,
-                    ::taxon::V_object& response, const ::taxon::V_object& request)
+do_role_create(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
+               const ::poseidon::UUID& /*request_service_uuid*/,
+               ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -222,8 +222,8 @@ do_star_role_create(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
     // * Description
     //
     //   Creates a new role in the _default_ database. By design，the caller should
-    //   call `*nickname/acquire` first to acquire ownership of `nickname`, then pass
-    //   `serial` as `roid`. After a role is created, it will be loaded into Redis
+    //   call `agent/nickname/acquire` first to acquire ownership of `nickname`, then
+    //   pass `serial` as `roid`. After a role is created, it will be loaded into Redis
     //   automatically.
 
     ////////////////////////////////////////////////////////////
@@ -317,9 +317,9 @@ do_star_role_create(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
   }
 
 void
-do_star_role_load(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                  const ::poseidon::UUID& /*request_service_uuid*/,
-                  ::taxon::V_object& response, const ::taxon::V_object& request)
+do_role_load(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
+             const ::poseidon::UUID& /*request_service_uuid*/,
+             ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -431,9 +431,9 @@ do_store_role_record_into_mysql(::poseidon::Abstract_Fiber& fiber,
   }
 
 void
-do_star_role_unload(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                    const ::poseidon::UUID& /*request_service_uuid*/,
-                    ::taxon::V_object& response, const ::taxon::V_object& request)
+do_role_unload(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
+               const ::poseidon::UUID& /*request_service_uuid*/,
+               ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -518,9 +518,9 @@ do_star_role_unload(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
   }
 
 void
-do_star_role_flush(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                   const ::poseidon::UUID& /*request_service_uuid*/,
-                   ::taxon::V_object& response, const ::taxon::V_object& request)
+do_role_flush(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
+              const ::poseidon::UUID& /*request_service_uuid*/,
+              ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -691,11 +691,11 @@ reload(const ::poseidon::Config_File& conf_file)
     this->m_impl->redis_role_ttl = redis_role_ttl;
 
     // Set up request handlers.
-    service.set_handler(&"*role/list", bindw(this->m_impl, do_star_role_list));
-    service.set_handler(&"*role/create", bindw(this->m_impl, do_star_role_create));
-    service.set_handler(&"*role/load", bindw(this->m_impl, do_star_role_load));
-    service.set_handler(&"*role/unload", bindw(this->m_impl, do_star_role_unload));
-    service.set_handler(&"*role/flush", bindw(this->m_impl, do_star_role_flush));
+    service.set_handler(&"monitor/role/list", bindw(this->m_impl, do_role_list));
+    service.set_handler(&"monitor/role/create", bindw(this->m_impl, do_role_create));
+    service.set_handler(&"monitor/role/load", bindw(this->m_impl, do_role_load));
+    service.set_handler(&"monitor/role/unload", bindw(this->m_impl, do_role_unload));
+    service.set_handler(&"monitor/role/flush", bindw(this->m_impl, do_role_flush));
 
     // Restart the service.
     this->m_impl->save_timer.start(100ms, 11001ms, bindw(this->m_impl, do_save_timer_callback));

@@ -17,10 +17,9 @@ struct Implementation
   };
 
 void
-do_star_virtual_clock_set_offset(const shptr<Implementation>& impl,
-                                 ::poseidon::Abstract_Fiber& /*fiber*/,
-                                 const ::poseidon::UUID& /*request_service_uuid*/,
-                                 ::taxon::V_object& response, const ::taxon::V_object& request)
+do_virtual_clock_set_offset(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
+                            const ::poseidon::UUID& /*request_service_uuid*/,
+                            ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -155,7 +154,7 @@ reload(const ::poseidon::Config_File& conf_file)
     this->m_impl->offset = virtual_clock_offset;
 
     // Set up request handlers.
-    service.set_handler(&"*virtual_clock/set_offset", bindw(this->m_impl, do_star_virtual_clock_set_offset));
+    service.set_handler(&"logic/virtual_clock/set_offset", bindw(this->m_impl, do_virtual_clock_set_offset));
   }
 
 }  // namespace k32::logic

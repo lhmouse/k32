@@ -2,30 +2,30 @@
 
 1. [General Status Codes](#general-status-codes)
 2. [Agent Service Opcodes](#agent-service-opcodes)
-   1. [`*user/kick`](#userkick)
-   2. [`*user/check_roles`](#usercheck_roles)
-   3. [`*user/push_message`](#userpush_message)
-   4. [`*user/reload_relay_conf`](#userreload_relay_conf)
-   5. [`*user/ban/set`](#userbanset)
-   6. [`*user/ban/lift`](#userbanlift)
-   7. [`*nickname/acquire`](#nicknameacquire)
-   8. [`*nickname/release`](#nicknamerelease)
+   1. [`agent/user/kick`](#agentuserkick)
+   2. [`agent/user/check_roles`](#agentusercheck_roles)
+   3. [`agent/user/push_message`](#agentuserpush_message)
+   4. [`agent/user/reload_relay_conf`](#agentuserreload_relay_conf)
+   5. [`agent/user/ban/set`](#agentuserbanset)
+   6. [`agent/user/ban/lift`](#agentuserbanlift)
+   7. [`agent/nickname/acquire`](#agentnicknameacquire)
+   8. [`agent/nickname/release`](#agentnicknamerelease)
 3. [Chat Service Opcodes](#chat-service-opcodes)
-   1. [`*chat/load_messages_by_thread`](#chatload_messages_by_thread)
-   2. [`*chat/save_message`](#chatsave_message)
+   1. [`chat/thread/check_multi`](#chatthreadcheck_multi)
+   2. [`chat/thread/append`](#chatthreadappend)
 4. [Monitor Service Opcodes](#monitor-service-opcodes)
-   1. [`*role/list`](#rolelist)
-   2. [`*role/create`](#rolecreate)
-   3. [`*role/load`](#roleload)
-   4. [`*role/unload`](#roleunload)
-   5. [`*role/flush`](#roleflush)
+   1. [`monitor/role/list`](#monitorrolelist)
+   2. [`monitor/role/create`](#monitorrolecreate)
+   3. [`monitor/role/load`](#monitorroleload)
+   4. [`monitor/role/unload`](#monitorroleunload)
+   5. [`monitor/role/flush`](#monitorroleflush)
 5. [Logic Service Opcodes](#logic-service-opcodes)
-   1. [`*role/login`](#rolelogin)
-   2. [`*role/logout`](#rolelogout)
-   3. [`*role/reconnect`](#rolereconnect)
-   4. [`*role/disconnect`](#roledisconnect)
-   5. [`*role/on_client_request`](#roleon_client_request)
-   6. [`*virtual_clock/set_offset`](#virtual_clockset_offset)
+   1. [`logic/role/login`](#logicrolelogin)
+   2. [`logic/role/logout`](#logicrolelogout)
+   3. [`logic/role/reconnect`](#logicrolereconnect)
+   4. [`logic/role/disconnect`](#logicroledisconnect)
+   5. [`logic/role/on_client_request`](#logicroleon_client_request)
+   6. [`logic/virtual_clock/set_offset`](#logicvirtual_clockset_offset)
 
 ## General Status Codes
 
@@ -53,7 +53,7 @@ strings:
 
 ## Agent Service Opcodes
 
-### `*user/kick`
+### `agent/user/kick`
 
 * Service Type
 
@@ -77,7 +77,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*user/check_roles`
+### `agent/user/check_roles`
 
 * Service Type
 
@@ -101,7 +101,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*user/push_message`
+### `agent/user/push_message`
 
 * Service Type
 
@@ -125,7 +125,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*user/reload_relay_conf`
+### `agent/user/reload_relay_conf`
 
 * Service Type
 
@@ -145,7 +145,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*user/ban/set`
+### `agent/user/ban/set`
 
 * Service Type
 
@@ -167,7 +167,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*user/ban/lift`
+### `agent/user/ban/lift`
 
 * Service Type
 
@@ -187,7 +187,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*nickname/acquire`
+### `agent/nickname/acquire`
 
 * Service Type
 
@@ -213,7 +213,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*nickname/release`
+### `agent/nickname/release`
 
 * Service Type
 
@@ -235,7 +235,7 @@ strings:
 
 ## Chat Service Opcodes
 
-### `*chat/load_messages_by_thread`
+### `chat/thread/check_multi`
 
 * Service Type
 
@@ -259,7 +259,7 @@ strings:
   is specified, only messages whose timestamps are _greater than_ `last_check_time`
   are returned.
 
-### `*chat/save_message`
+### `chat/thread/append`
 
 * Service Type
 
@@ -280,7 +280,7 @@ strings:
 
 ## Monitor Service Opcodes
 
-### `*role/list`
+### `monitor/role/list`
 
 * Service Type
 
@@ -304,7 +304,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*role/create`
+### `monitor/role/create`
 
 * Service Type
 
@@ -323,13 +323,13 @@ strings:
 * Description
 
   Creates a new role in the _default_ database. By design，the caller should
-  call `*nickname/acquire` first to acquire ownership of `nickname`, then pass
+  call `agent/nickname/acquire` first to acquire ownership of `nickname`, then pass
   `serial` as `roid`. After a role is created, it will be loaded into Redis
   automatically.
 
 [back to table of contents](#table-of-contents)
 
-### `*role/load`
+### `monitor/role/load`
 
 * Service Type
 
@@ -351,7 +351,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*role/unload`
+### `monitor/role/unload`
 
 * Service Type
 
@@ -371,7 +371,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*role/flush`
+### `monitor/role/flush`
 
 * Service Type
 
@@ -393,7 +393,7 @@ strings:
 
 ## Logic Service Opcodes
 
-### `*role/login`
+### `logic/role/login`
 
 * Service Type
 
@@ -416,7 +416,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*role/logout`
+### `logic/role/logout`
 
 * Service Type
 
@@ -436,7 +436,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*role/reconnect`
+### `logic/role/reconnect`
 
 * Service Type
 
@@ -459,7 +459,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*role/disconnect`
+### `logic/role/disconnect`
 
 * Service Type
 
@@ -479,7 +479,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*role/on_client_request`
+### `logic/role/on_client_request`
 
 * Service Type
 
@@ -502,7 +502,7 @@ strings:
 
 [back to table of contents](#table-of-contents)
 
-### `*virtual_clock/set_offset`
+### `logic/virtual_clock/set_offset`
 
 * Service Type
 

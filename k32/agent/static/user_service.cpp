@@ -115,7 +115,7 @@ do_publish_user_on_redis(::poseidon::Abstract_Fiber& fiber, const User_Record& u
           tx_args.try_emplace(&"username", old_uinfo.username.rdstr());
           tx_args.try_emplace(&"ws_status", static_cast<int>(user_ws_status_login_conflict));
 
-          auto srv_q = new_sh<Service_Future>(old_uinfo._agent_srv, &"*user/kick", tx_args);
+          auto srv_q = new_sh<Service_Future>(old_uinfo._agent_srv, &"agent/user/kick", tx_args);
           service.launch(srv_q);
           fiber.yield(srv_q);
         }
@@ -137,7 +137,7 @@ do_role_logout_common(const shptr<Implementation>& impl, ::poseidon::Abstract_Fi
     ::taxon::V_object tx_args;
     tx_args.try_emplace(&"roid", roid);
 
-    auto srv_q = new_sh<Service_Future>(logic_service_uuid, &"*role/logout", tx_args);
+    auto srv_q = new_sh<Service_Future>(logic_service_uuid, &"logic/role/logout", tx_args);
     service.launch(srv_q);
     fiber.yield(srv_q);
 
@@ -176,7 +176,7 @@ do_role_login_common(const shptr<Implementation>& impl, ::poseidon::Abstract_Fib
     tx_args.try_emplace(&"agent_srv", service.service_uuid().to_string());
     tx_args.try_emplace(&"monitor_srv", do_find_my_monitor().to_string());
 
-    auto srv_q = new_sh<Service_Future>(logic_service_uuid, &"*role/login", tx_args);
+    auto srv_q = new_sh<Service_Future>(logic_service_uuid, &"logic/role/login", tx_args);
     service.launch(srv_q);
     fiber.yield(srv_q);
 
@@ -203,7 +203,7 @@ do_welcome_client(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber&
         if(r.second.service_type == "logic")
           multicast_list.emplace_back(r.first);
 
-      auto srv_q = new_sh<Service_Future>(multicast_list, &"*role/reconnect", tx_args);
+      auto srv_q = new_sh<Service_Future>(multicast_list, &"logic/role/reconnect", tx_args);
       service.launch(srv_q);
       fiber.yield(srv_q);
 
@@ -232,7 +232,7 @@ do_welcome_client(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber&
       ::taxon::V_object tx_args;
       tx_args.try_emplace(&"roid", fresh_roid);
 
-      auto srv_q = new_sh<Service_Future>(do_find_my_monitor(), &"*role/load", tx_args);
+      auto srv_q = new_sh<Service_Future>(do_find_my_monitor(), &"monitor/role/load", tx_args);
       service.launch(srv_q);
       fiber.yield(srv_q);
 
@@ -249,7 +249,7 @@ do_welcome_client(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber&
       avatar_list.emplace_back(r.second);
 
     ::taxon::V_object tx_args;
-    tx_args.try_emplace(&"%opcode", &"=role/list");
+    tx_args.try_emplace(&"%opcode", &"ntfy/role/list");
     tx_args.try_emplace(&"avatar_list", avatar_list);
 
     auto str = ::taxon::Value(tx_args).to_string(::taxon::option_json_mode);
@@ -383,7 +383,7 @@ do_server_hws_callback(const shptr<Implementation>& impl,
           ::taxon::V_object tx_args;
           tx_args.try_emplace(&"username", uinfo.username.rdstr());
 
-          auto srv_q = new_sh<Service_Future>(do_find_my_monitor(), &"*role/list", tx_args);
+          auto srv_q = new_sh<Service_Future>(do_find_my_monitor(), &"monitor/role/list", tx_args);
           service.launch(srv_q);
           fiber.yield(srv_q);
 
@@ -518,7 +518,7 @@ do_server_hws_callback(const shptr<Implementation>& impl,
             ::taxon::V_object tx_args;
             tx_args.try_emplace(&"roid", uconn.current_roid);
 
-            auto srv_q = new_sh<Service_Future>(uconn.current_logic_srv, &"*role/disconnect", tx_args);
+            auto srv_q = new_sh<Service_Future>(uconn.current_logic_srv, &"logic/role/disconnect", tx_args);
             service.launch(srv_q);
             fiber.yield(srv_q);
           }
@@ -687,9 +687,9 @@ do_mysql_check_table_nickname(::poseidon::Abstract_Fiber& fiber)
   }
 
 void
-do_star_nickname_acquire(const shptr<Implementation>& /*impl*/, ::poseidon::Abstract_Fiber& fiber,
-                         const ::poseidon::UUID& /*request_service_uuid*/,
-                         ::taxon::V_object& response, const ::taxon::V_object& request)
+do_nickname_acquire(const shptr<Implementation>& /*impl*/, ::poseidon::Abstract_Fiber& fiber,
+                    const ::poseidon::UUID& /*request_service_uuid*/,
+                    ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -777,9 +777,9 @@ do_star_nickname_acquire(const shptr<Implementation>& /*impl*/, ::poseidon::Abst
   }
 
 void
-do_star_nickname_release(const shptr<Implementation>& /*impl*/, ::poseidon::Abstract_Fiber& fiber,
-                         const ::poseidon::UUID& /*request_service_uuid*/,
-                         ::taxon::V_object& response, const ::taxon::V_object& request)
+do_nickname_release(const shptr<Implementation>& /*impl*/, ::poseidon::Abstract_Fiber& fiber,
+                    const ::poseidon::UUID& /*request_service_uuid*/,
+                    ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -893,9 +893,9 @@ do_check_user_timer_callback(const shptr<Implementation>& impl,
   }
 
 void
-do_star_user_kick(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
-                  const ::poseidon::UUID& /*request_service_uuid*/,
-                  ::taxon::V_object& response, const ::taxon::V_object& request)
+do_user_kick(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
+             const ::poseidon::UUID& /*request_service_uuid*/,
+             ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -945,9 +945,9 @@ do_star_user_kick(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber&
   }
 
 void
-do_star_user_check_roles(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
-                         const ::poseidon::UUID& /*request_service_uuid*/,
-                         ::taxon::V_object& response, const ::taxon::V_object& request)
+do_user_check_roles(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
+                    const ::poseidon::UUID& /*request_service_uuid*/,
+                    ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -989,9 +989,9 @@ do_star_user_check_roles(const shptr<Implementation>& impl, ::poseidon::Abstract
   }
 
 void
-do_star_user_push_message(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
-                          const ::poseidon::UUID& /*request_service_uuid*/,
-                          ::taxon::V_object& /*response*/, const ::taxon::V_object& request)
+do_user_push_message(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
+                     const ::poseidon::UUID& /*request_service_uuid*/,
+                     ::taxon::V_object& /*response*/, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -1067,7 +1067,7 @@ do_relay_forward_to_logic(const shptr<Implementation>& impl, ::poseidon::Abstrac
     tx_args.try_emplace(&"client_opcode", request.at(&"%opcode").as_string());
     tx_args.try_emplace(&"client_req", request);
 
-    auto srv_q = new_sh<Service_Future>(logic_service_uuid, &"*role/on_client_request", tx_args);
+    auto srv_q = new_sh<Service_Future>(logic_service_uuid, &"logic/role/on_client_request", tx_args);
     service.launch(srv_q);
     fiber.yield(srv_q);
 
@@ -1121,9 +1121,9 @@ do_reload_relay_conf(const shptr<Implementation>& impl)
   }
 
 void
-do_star_user_reload_relay_conf(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
-                               const ::poseidon::UUID& /*request_service_uuid*/,
-                               ::taxon::V_object& response, const ::taxon::V_object& /*request*/)
+do_user_reload_relay_conf(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
+                          const ::poseidon::UUID& /*request_service_uuid*/,
+                          ::taxon::V_object& response, const ::taxon::V_object& /*request*/)
   {
     // * Request Parameters
     //
@@ -1145,9 +1145,9 @@ do_star_user_reload_relay_conf(const shptr<Implementation>& impl, ::poseidon::Ab
   }
 
 void
-do_star_user_ban_set(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                     const ::poseidon::UUID& /*request_service_uuid*/,
-                     ::taxon::V_object& response, const ::taxon::V_object& request)
+do_user_ban_set(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
+                const ::poseidon::UUID& /*request_service_uuid*/,
+                ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -1211,9 +1211,9 @@ do_star_user_ban_set(const shptr<Implementation>& impl, ::poseidon::Abstract_Fib
   }
 
 void
-do_star_user_ban_lift(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                      const ::poseidon::UUID& /*request_service_uuid*/,
-                      ::taxon::V_object& response, const ::taxon::V_object& request)
+do_user_ban_lift(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
+                 const ::poseidon::UUID& /*request_service_uuid*/,
+                 ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -1313,7 +1313,7 @@ do_plus_role_create(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
     tx_args.try_emplace(&"nickname", nickname);
     tx_args.try_emplace(&"username", username.rdstr());
 
-    auto srv_q = new_sh<Service_Future>(service.service_uuid(), &"*nickname/acquire", tx_args);
+    auto srv_q = new_sh<Service_Future>(service.service_uuid(), &"agent/nickname/acquire", tx_args);
     service.launch(srv_q);
     fiber.yield(srv_q);
 
@@ -1333,7 +1333,7 @@ do_plus_role_create(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
     tx_args.try_emplace(&"nickname", nickname);
     tx_args.try_emplace(&"username", username.rdstr());
 
-    srv_q = new_sh<Service_Future>(do_find_my_monitor(), &"*role/create", tx_args);
+    srv_q = new_sh<Service_Future>(do_find_my_monitor(), &"monitor/role/create", tx_args);
     service.launch(srv_q);
     fiber.yield(srv_q);
 
@@ -1375,7 +1375,7 @@ do_plus_role_login(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber
     ::taxon::V_object tx_args;
     tx_args.try_emplace(&"roid", roid);
 
-    auto srv_q = new_sh<Service_Future>(do_find_my_monitor(), &"*role/load", tx_args);
+    auto srv_q = new_sh<Service_Future>(do_find_my_monitor(), &"monitor/role/load", tx_args);
     service.launch(srv_q);
     fiber.yield(srv_q);
 
@@ -1587,22 +1587,22 @@ reload(const ::poseidon::Config_File& conf_file)
     this->m_impl->nickname_length_limits[1] = nickname_length_limits_1;
 
     // Set up builtin handlers.
-    this->m_impl->ws_handlers.insert_or_assign(&"+role/create", bindw(this->m_impl, do_plus_role_create));
-    this->m_impl->ws_handlers.insert_or_assign(&"+role/login", bindw(this->m_impl, do_plus_role_login));
-    this->m_impl->ws_handlers.insert_or_assign(&"+role/logout", bindw(this->m_impl, do_plus_role_logout));
+    this->m_impl->ws_handlers.insert_or_assign(&"req/role/create", bindw(this->m_impl, do_plus_role_create));
+    this->m_impl->ws_handlers.insert_or_assign(&"req/role/login", bindw(this->m_impl, do_plus_role_login));
+    this->m_impl->ws_handlers.insert_or_assign(&"req/role/logout", bindw(this->m_impl, do_plus_role_logout));
 
     // Allow builtin handlers to be overridden; well, they may be.
     do_reload_relay_conf(this->m_impl);
 
     // Set up request handlers.
-    service.set_handler(&"*user/kick", bindw(this->m_impl, do_star_user_kick));
-    service.set_handler(&"*user/check_roles", bindw(this->m_impl, do_star_user_check_roles));
-    service.set_handler(&"*user/push_message", bindw(this->m_impl, do_star_user_push_message));
-    service.set_handler(&"*user/reload_relay_conf", bindw(this->m_impl, do_star_user_reload_relay_conf));
-    service.set_handler(&"*user/ban/set", bindw(this->m_impl, do_star_user_ban_set));
-    service.set_handler(&"*user/ban/lift", bindw(this->m_impl, do_star_user_ban_lift));
-    service.set_handler(&"*nickname/acquire", bindw(this->m_impl, do_star_nickname_acquire));
-    service.set_handler(&"*nickname/release", bindw(this->m_impl, do_star_nickname_release));
+    service.set_handler(&"agent/user/kick", bindw(this->m_impl, do_user_kick));
+    service.set_handler(&"agent/user/check_roles", bindw(this->m_impl, do_user_check_roles));
+    service.set_handler(&"agent/user/push_message", bindw(this->m_impl, do_user_push_message));
+    service.set_handler(&"agent/user/reload_relay_conf", bindw(this->m_impl, do_user_reload_relay_conf));
+    service.set_handler(&"agent/user/ban/set", bindw(this->m_impl, do_user_ban_set));
+    service.set_handler(&"agent/user/ban/lift", bindw(this->m_impl, do_user_ban_lift));
+    service.set_handler(&"agent/nickname/acquire", bindw(this->m_impl, do_nickname_acquire));
+    service.set_handler(&"agent/nickname/release", bindw(this->m_impl, do_nickname_release));
 
     // Restart the service.
     this->m_impl->ping_timer.start(150ms, 7001ms, bindw(this->m_impl, do_ping_timer_callback));

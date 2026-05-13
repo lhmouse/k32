@@ -27,7 +27,7 @@ poseidon_module_main(void)
 /*TEST*/
 
 role_service.add_handler(
-  &"+test/meow",
+  &"req/test/meow",
   +[](::poseidon::Abstract_Fiber& fiber,
       int64_t roid, ::taxon::V_object& resp, const ::taxon::V_object& req)
     {

@@ -71,9 +71,9 @@ do_mysql_check_table_chat(::poseidon::Abstract_Fiber& fiber)
   }
 
 void
-do_star_chat_check_threads(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                           const ::poseidon::UUID& /*request_service_uuid*/,
-                           ::taxon::V_object& response, const ::taxon::V_object& request)
+do_thread_check_multi(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
+                      const ::poseidon::UUID& /*request_service_uuid*/,
+                      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -156,9 +156,9 @@ do_star_chat_check_threads(const shptr<Implementation>& impl, ::poseidon::Abstra
   }
 
 void
-do_star_chat_save_message(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                          const ::poseidon::UUID& /*request_service_uuid*/,
-                          ::taxon::V_object& response, const ::taxon::V_object& request)
+do_thread_append(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
+                 const ::poseidon::UUID& /*request_service_uuid*/,
+                 ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -356,8 +356,8 @@ reload(const ::poseidon::Config_File& conf_file)
     this->m_impl->cached_thread_ttl = cached_thread_ttl;
 
     // Set up request handlers.
-    service.set_handler(&"*chat/check_threads", bindw(this->m_impl, do_star_chat_check_threads));
-    service.set_handler(&"*chat/save_message", bindw(this->m_impl, do_star_chat_save_message));
+    service.set_handler(&"chat/thread/check_multi", bindw(this->m_impl, do_thread_check_multi));
+    service.set_handler(&"chat/thread/append", bindw(this->m_impl, do_thread_append));
 
     // Restart the service.
     this->m_impl->save_timer.start(100ms, 11001ms, bindw(this->m_impl, do_save_timer_callback));

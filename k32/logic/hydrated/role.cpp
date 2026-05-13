@@ -63,7 +63,7 @@ on_connect()
    obj.open(&"client_data").open_object().try_emplace(&"one", 1);
    obj.open(&"client_data").open_object().try_emplace(&"two", &"zz1");
 
-   auto srv_q = new_sh<Service_Future>(this->agent_service_uuid(), &"*user/push_message", obj);
+   auto srv_q = new_sh<Service_Future>(this->agent_service_uuid(), &"agent/user/push_message", obj);
    service.launch(srv_q);
 
 /*TEST*/
