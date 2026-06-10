@@ -129,20 +129,19 @@ do_role_list(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fibe
   {
     // * Request Parameters
     //
-    //   - `roid` <sub>integer</sub> : Unique ID of role to create.
-    //   - `nickname` <sub>string</sub> : Nickname of new role.
-    //   - `username` <sub>string</sub> : Owner of new role.
+    //   - `username` <sub>string</sub> : Owner of roles to list.
     //
     // * Response Parameters
     //
     //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
+    //   - `raw_avatars` <sub>object of strings</sub> : Roles that have been found.
+    //     - _key_ <sub>string</sub> : Role ID as decimal string.
+    //     - _value_ <sub>string</sub> : Raw avatar data, encoded in JSON.
     //
     // * Description
     //
-    //   Creates a new role in the _default_ database. By design，the caller should
-    //   call `agent/nickname/acquire` first to acquire ownership of `nickname`, then
-    //   pass `serial` as `roid`. After a role is created, it will be loaded into Redis
-    //   automatically.
+    //   Searches the _default_ database for all roles that belong to `username`, and
+    //   returns their avatars. The result is not cached.
 
     ////////////////////////////////////////////////////////////
     //

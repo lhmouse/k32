@@ -687,7 +687,7 @@ do_mysql_check_table_nickname(::poseidon::Abstract_Fiber& fiber)
   }
 
 void
-do_nickname_acquire(const shptr<Implementation>& /*impl*/, ::poseidon::Abstract_Fiber& fiber,
+do_nickname_acquire(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
                     const ::poseidon::UUID& /*request_service_uuid*/,
                     ::taxon::V_object& response, const ::taxon::V_object& request)
   {
@@ -716,6 +716,8 @@ do_nickname_acquire(const shptr<Implementation>& /*impl*/, ::poseidon::Abstract_
 
     phcow_string username = request.at(&"username").as_string();
     POSEIDON_CHECK(username != "");
+
+    POSEIDON_CHECK(impl->db_ready);
 
     ////////////////////////////////////////////////////////////
     //
@@ -777,7 +779,7 @@ do_nickname_acquire(const shptr<Implementation>& /*impl*/, ::poseidon::Abstract_
   }
 
 void
-do_nickname_release(const shptr<Implementation>& /*impl*/, ::poseidon::Abstract_Fiber& fiber,
+do_nickname_release(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
                     const ::poseidon::UUID& /*request_service_uuid*/,
                     ::taxon::V_object& response, const ::taxon::V_object& request)
   {
@@ -797,6 +799,8 @@ do_nickname_release(const shptr<Implementation>& /*impl*/, ::poseidon::Abstract_
     //
     cow_string nickname = request.at(&"nickname").as_string();
     POSEIDON_CHECK(nickname != "");
+
+    POSEIDON_CHECK(impl->db_ready);
 
     ////////////////////////////////////////////////////////////
     //
@@ -958,8 +962,8 @@ do_user_check_roles(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
     //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
     //   - `roles` <sub>object of objects</sub> : Users and their roles.
     //     - _key_ <sub>string</sub> : Username.
-    //     - `roid` <sub>integer, optional</sub> : Current role ID.
-    //     - `logic_srv` <sub>string, optional</sub> : Current logic service UUID.
+    //     - `roid` <sub>integer</sub> : Current role ID.
+    //     - `logic_srv` <sub>string</sub> : Current logic service UUID.
     //
     // * Description
     //
@@ -1153,6 +1157,7 @@ do_user_ban_set(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& f
     //
     //   - `username` <sub>string</sub> : Name of user to ban.
     //   - `until` <sub>timestamp</sub> : Ban in effect until this time point.
+    //   - `reason` <sub>string, optional</sub> : Additional reason string.
     //
     // * Response Parameters
     //
@@ -1170,6 +1175,10 @@ do_user_ban_set(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& f
 
     system_time until = request.at(&"until").as_time();
     POSEIDON_CHECK(until.time_since_epoch() >= 946684800s);  // 2000-1-1
+
+    cow_string reason;
+    if(auto ptr = request.ptr(&"reason"))
+      reason = ptr->as_string();
 
     POSEIDON_CHECK(impl->db_ready);
 
@@ -1203,7 +1212,7 @@ do_user_ban_set(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& f
 
     if(auto uconn = impl->connections.ptr(username))
       if(auto session = uconn->weak_session.lock())
-        session->ws_shut_down(user_ws_status_ban);
+        session->ws_shut_down(user_ws_status_ban, reason);
 
     POSEIDON_LOG_INFO(("Set ban on `$1` until `$2`"), username, until);
 
@@ -1217,7 +1226,7 @@ do_user_ban_lift(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& 
   {
     // * Request Parameters
     //
-    //   - `username` <sub>string</sub> : Name of user to ban.
+    //   - `username` <sub>string</sub> : Name of user to lift ban from.
     //
     // * Response Parameters
     //

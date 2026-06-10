@@ -92,8 +92,8 @@ strings:
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
   - `roles` <sub>object of objects</sub> : Users and their roles.
     - _key_ <sub>string</sub> : Username.
-    - `roid` <sub>integer, optional</sub> : Current role ID.
-    - `logic_srv` <sub>string, optional</sub> : Current logic service UUID.
+    - `roid` <sub>integer</sub> : Current role ID.
+    - `logic_srv` <sub>string</sub> : Current logic service UUID.
 
 * Description
 
@@ -155,6 +155,7 @@ strings:
 
   - `username` <sub>string</sub> : Name of user to ban.
   - `until` <sub>timestamp</sub> : Ban in effect until this time point.
+  - `reason` <sub>string, optional</sub> : Additional reason string.
 
 * Response Parameters
 
@@ -175,7 +176,7 @@ strings:
 
 * Request Parameters
 
-  - `username` <sub>string</sub> : Name of user to ban.
+  - `username` <sub>string</sub> : Name of user to lift ban from.
 
 * Response Parameters
 
@@ -251,7 +252,7 @@ strings:
   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
   - `raw_payload_list` <sub>array of strings</sub> : Message payloads, encoded
     in JSON and sorted by time of creation.
-  - `check_time` <sub>timestamp</sub> : Timestamp of last check.
+  - `check_time` <sub>timestamp</sub> : Timestamp on the server.
 
 * Description
 
@@ -267,8 +268,8 @@ strings:
 
 * Request Parameters
 
-  - `"thread_key"` <sub>string</sub> : Key of thread to append new message.
-  - `"raw_payload"` <sub>string</sub> : Message payload, encoded in JSON.
+  - `thread_key` <sub>string</sub> : Key of thread to append new message.
+  - `raw_payload` <sub>string</sub> : Message payload, encoded in JSON.
 
 * Response Parameters
 

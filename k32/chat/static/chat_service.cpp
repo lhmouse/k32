@@ -85,7 +85,7 @@ do_thread_check_multi(const shptr<Implementation>& impl, ::poseidon::Abstract_Fi
     //   - `status` <sub>string</sub> : [General status code.](#general-status-codes)
     //   - `raw_payload_list` <sub>array of strings</sub> : Message payloads, encoded
     //     in JSON and sorted by time of creation.
-    //   - `check_time` <sub>timestamp</sub> : Timestamp of last check.
+    //   - `check_time` <sub>timestamp</sub> : Timestamp on the server.
     //
     // * Description
     //
@@ -108,9 +108,6 @@ do_thread_check_multi(const shptr<Implementation>& impl, ::poseidon::Abstract_Fi
 
     ////////////////////////////////////////////////////////////
     //
-    ::std::multimap<system_time, cow_string> sorted_messages;
-    const pair<system_time, cow_string> origin(last_check_time, &"");
-
     for(const auto& thread_key : thread_key_list)
       if(!impl->chat_threads.count(thread_key)) {
         // Load thread from MySQL.
@@ -138,10 +135,12 @@ do_thread_check_multi(const shptr<Implementation>& impl, ::poseidon::Abstract_Fi
       }
 
     // Copy messages.
+    ::std::multimap<system_time, cow_string> sorted_messages;
     for(const auto& thread_key : thread_key_list)
       if(auto pth = impl->chat_threads.ptr(thread_key))
         sorted_messages.insert(
-            ::std::upper_bound(pth->messages.begin(), pth->messages.end(), origin),
+            ::std::upper_bound(pth->messages.begin(), pth->messages.end(),
+                               ::std::make_pair(last_check_time, cow_string())),
             pth->messages.end());
 
     // Pack sorted messages.
@@ -151,7 +150,7 @@ do_thread_check_multi(const shptr<Implementation>& impl, ::poseidon::Abstract_Fi
       raw_payload_list.emplace_back(r.second);
 
     response.try_emplace(&"raw_payload_list", raw_payload_list);
-    response.try_emplace(&"check_time", origin.first);
+    response.try_emplace(&"check_time", system_clock::now());
     response.try_emplace(&"status", &"gs_ok");
   }
 
@@ -162,8 +161,8 @@ do_thread_append(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& 
   {
     // * Request Parameters
     //
-    //   - `"thread_key"` <sub>string</sub> : Key of thread to append new message.
-    //   - `"raw_payload"` <sub>string</sub> : Message payload, encoded in JSON.
+    //   - `thread_key` <sub>string</sub> : Key of thread to append new message.
+    //   - `raw_payload` <sub>string</sub> : Message payload, encoded in JSON.
     //
     // * Response Parameters
     //
