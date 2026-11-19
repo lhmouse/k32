@@ -43,7 +43,7 @@ add_project_arguments(
     '-Wunused-but-set-variable', '-Wunused-but-set-parameter', '-Wno-redundant-move',
     '-Wno-missing-braces',
     cxx.get_supported_arguments(
-      '-masm=intel', '-msse4.1', '-fno-ident', '-fno-devirtualize-speculatively',
+      '-masm=intel', '-mavx2', '-fno-ident', '-fno-devirtualize-speculatively',
       '-fimplicit-constexpr', '-Wsuggest-attribute=noreturn', '-Wno-option-ignored',
       '-Wno-unused-command-line-argument', '-Wno-unqualified-std-cast-call',
       '-Wno-bitwise-instead-of-logical'),
@@ -61,7 +61,7 @@ endif
 # Modules
 #===========================================================
 
-lib_common = static_library('common',
+libcommon = static_library('common',
     cpp_pch: 'k32/xprecompiled.hpp',
     sources: [
       'k32/common/data/service_record.cpp', 'k32/common/data/service_response.cpp',
@@ -78,7 +78,7 @@ shared_module('k32_agent',
     sources: [
       'k32/agent/globals.cpp', 'k32/agent/static/user_service.cpp',
     ],
-    link_with: lib_common,
+    link_with: libcommon,
     install: true)
 
 shared_module('k32_monitor',
@@ -86,7 +86,7 @@ shared_module('k32_monitor',
     sources: [
       'k32/monitor/globals.cpp', 'k32/monitor/static/role_service.cpp',
     ],
-    link_with: lib_common,
+    link_with: libcommon,
     install: true)
 
 shared_module('k32_chat',
@@ -94,7 +94,7 @@ shared_module('k32_chat',
     sources: [
       'k32/chat/globals.cpp', 'k32/chat/static/chat_service.cpp',
     ],
-    link_with: lib_common,
+    link_with: libcommon,
     install: true)
 
 shared_module('k32_logic',
@@ -103,5 +103,5 @@ shared_module('k32_logic',
       'k32/logic/globals.cpp', 'k32/logic/static/virtual_clock.cpp',
        'k32/logic/hydrated/role.cpp', 'k32/logic/static/role_service.cpp',
     ],
-    link_with: lib_common,
+    link_with: libcommon,
     install: true)
