@@ -117,8 +117,8 @@ do_flush_role_to_mysql(::poseidon::Abstract_Fiber& fiber, Hydrated_Role& hyd)
 
 void
 do_save_timer_callback(const shptr<Implementation>& impl,
-                       const shptr<::poseidon::Abstract_Timer>& /*timer*/,
-                       ::poseidon::Abstract_Fiber& fiber, steady_time now)
+      const shptr<::poseidon::Abstract_Timer>& /*timer*/,
+      ::poseidon::Abstract_Fiber& fiber, steady_time now)
   {
     if(!impl->hyd_roles.empty()) {
       // Check that every user is still on the same agent with the same role.
@@ -239,8 +239,8 @@ do_save_timer_callback(const shptr<Implementation>& impl,
 
 void
 do_role_login(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-              const ::poseidon::UUID& /*request_service_uuid*/,
-              ::taxon::V_object& response, const ::taxon::V_object& request)
+      const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -323,8 +323,8 @@ do_role_login(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fib
 
 void
 do_role_logout(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                    const ::poseidon::UUID& /*request_service_uuid*/,
-                    ::taxon::V_object& response, const ::taxon::V_object& request)
+      const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -365,9 +365,10 @@ do_role_logout(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fi
   }
 
 void
-do_role_reconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
-                  const ::poseidon::UUID& /*request_service_uuid*/,
-                  ::taxon::V_object& response, const ::taxon::V_object& request)
+do_role_reconnect(const shptr<Implementation>& impl,
+      ::poseidon::Abstract_Fiber& /*fiber*/,
+      const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     ::std::vector<int64_t> roid_list;
     for(const auto& r : request.at(&"roid_list").as_array()) {
@@ -397,9 +398,10 @@ do_role_reconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber&
   }
 
 void
-do_role_disconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
-                   const ::poseidon::UUID& /*request_service_uuid*/,
-                   ::taxon::V_object& response, const ::taxon::V_object& request)
+do_role_disconnect(const shptr<Implementation>& impl,
+      ::poseidon::Abstract_Fiber& /*fiber*/,
+      const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -435,9 +437,9 @@ do_role_disconnect(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber
   }
 
 void
-do_role_on_client_request(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                          const ::poseidon::UUID& /*request_service_uuid*/,
-                          ::taxon::V_object& response, const ::taxon::V_object& request)
+do_role_on_client_request(const shptr<Implementation>& impl,
+      ::poseidon::Abstract_Fiber& fiber, const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -492,8 +494,8 @@ do_role_on_client_request(const shptr<Implementation>& impl, ::poseidon::Abstrac
 
 void
 do_every_second_timer_callback(const shptr<Implementation>& impl,
-                               const shptr<::poseidon::Abstract_Timer>& /*timer*/,
-                               ::poseidon::Abstract_Fiber& /*fiber*/, steady_time /*now*/)
+      const shptr<::poseidon::Abstract_Timer>& /*timer*/,
+      ::poseidon::Abstract_Fiber& /*fiber*/, steady_time /*now*/)
   {
     ::std::vector<wkptr<Role>> weak_roles;
     weak_roles.reserve(impl->hyd_roles.size());

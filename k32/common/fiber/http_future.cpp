@@ -13,8 +13,8 @@ HTTP_Future(const cow_string& req_uri)
   }
 
 HTTP_Future::
-HTTP_Future(const cow_string& req_uri, const cow_string& req_content_type,
-            const cow_string& req_payload)
+HTTP_Future(const cow_string& req_uri,
+      const cow_string& req_content_type, const cow_string& req_payload)
   {
     this->m_req_uri = req_uri;
     this->m_req_content_type = req_content_type;

@@ -8,7 +8,7 @@ namespace k32 {
 
 Service_Future::
 Service_Future(const cow_vector<::poseidon::UUID>& multicast_list,
-               const phcow_string& opcode, const ::taxon::V_object& request)
+      const phcow_string& opcode, const ::taxon::V_object& request)
   {
     this->m_opcode = opcode;
     this->m_request = request;
@@ -19,8 +19,8 @@ Service_Future(const cow_vector<::poseidon::UUID>& multicast_list,
   }
 
 Service_Future::
-Service_Future(const ::poseidon::UUID& target_service_uuid, const phcow_string& opcode,
-               const ::taxon::V_object& request)
+Service_Future(const ::poseidon::UUID& target_service_uuid,
+      const phcow_string& opcode, const ::taxon::V_object& request)
   {
     this->m_opcode = opcode;
     this->m_request = request;

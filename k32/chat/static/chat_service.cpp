@@ -71,9 +71,9 @@ do_mysql_check_table_chat(::poseidon::Abstract_Fiber& fiber)
   }
 
 void
-do_thread_check_multi(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                      const ::poseidon::UUID& /*request_service_uuid*/,
-                      ::taxon::V_object& response, const ::taxon::V_object& request)
+do_thread_check_multi(const shptr<Implementation>& impl,
+      ::poseidon::Abstract_Fiber& fiber, const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -155,9 +155,9 @@ do_thread_check_multi(const shptr<Implementation>& impl, ::poseidon::Abstract_Fi
   }
 
 void
-do_thread_append(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                 const ::poseidon::UUID& /*request_service_uuid*/,
-                 ::taxon::V_object& response, const ::taxon::V_object& request)
+do_thread_append(const shptr<Implementation>& impl,
+      ::poseidon::Abstract_Fiber& fiber, const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -228,8 +228,8 @@ do_thread_append(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& 
 
 void
 do_save_timer_callback(const shptr<Implementation>& impl,
-                       const shptr<::poseidon::Abstract_Timer>& /*timer*/,
-                       ::poseidon::Abstract_Fiber& fiber, steady_time /*now*/)
+      const shptr<::poseidon::Abstract_Timer>& /*timer*/,
+      ::poseidon::Abstract_Fiber& fiber, steady_time /*now*/)
   {
     if(impl->db_ready == false) {
       // Check tables.

@@ -88,8 +88,9 @@ do_salt_password(char* pw, const ::poseidon::UUID& s, int64_t ts, const cow_stri
   }
 
 void
-do_set_response(const wkptr<Service_Future>& weak_req, const ::poseidon::UUID& request_uuid,
-                const ::taxon::V_object& response, const cow_string& error)
+do_set_response(const wkptr<Service_Future>& weak_req,
+      const ::poseidon::UUID& request_uuid,
+      const ::taxon::V_object& response, const cow_string& error)
   {
     if(!error.empty())
       POSEIDON_LOG_ERROR(("Received service error: $1"), error);
@@ -120,9 +121,9 @@ struct Local_Request_Fiber final : ::poseidon::Abstract_Fiber
     phcow_string m_opcode;
     ::taxon::V_object m_request;
 
-    Local_Request_Fiber(const shptr<Implementation>& impl, const shptr<Service_Future>& req,
-                        const ::poseidon::UUID& request_uuid, const phcow_string& opcode,
-                        const ::taxon::V_object& request)
+    Local_Request_Fiber(const shptr<Implementation>& impl,
+          const shptr<Service_Future>& req, const ::poseidon::UUID& request_uuid,
+          const phcow_string& opcode, const ::taxon::V_object& request)
       :
         m_weak_impl(impl), m_weak_req(req), m_request_uuid(request_uuid),
         m_opcode(opcode), m_request(request)
@@ -162,9 +163,9 @@ struct Local_Request_Fiber final : ::poseidon::Abstract_Fiber
 
 void
 do_client_ws_callback(const shptr<Implementation>& impl,
-                      const shptr<::poseidon::WS_Client_Session>& session,
-                      ::poseidon::Abstract_Fiber& /*fiber*/,
-                      ::poseidon::Easy_WS_Event event, linear_buffer&& data)
+      const shptr<::poseidon::WS_Client_Session>& session,
+      ::poseidon::Abstract_Fiber& /*fiber*/,
+      ::poseidon::Easy_WS_Event event, linear_buffer&& data)
   {
     switch(event)
       {
@@ -248,8 +249,8 @@ struct Remote_Response_Task final : ::poseidon::Abstract_Task
     cow_string m_error;
 
     Remote_Response_Task(const shptr<::poseidon::WS_Server_Session>& session,
-                         const ::poseidon::UUID& request_uuid,
-                         const ::taxon::V_object& response, const cow_string& error)
+          const ::poseidon::UUID& request_uuid,
+          const ::taxon::V_object& response, const cow_string& error)
       :
         m_weak_session(session),
         m_request_uuid(request_uuid), m_response(response), m_error(error)
@@ -276,8 +277,8 @@ struct Remote_Response_Task final : ::poseidon::Abstract_Task
 
 void
 do_send_remote_response(const shptr<::poseidon::WS_Server_Session>& session,
-                        const ::poseidon::UUID& request_uuid,
-                        const ::taxon::V_object& response, const cow_string& error)
+      const ::poseidon::UUID& request_uuid,
+      const ::taxon::V_object& response, const cow_string& error)
   {
     if(request_uuid.is_nil())
       return;
@@ -295,9 +296,9 @@ struct Remote_Request_Fiber final : ::poseidon::Abstract_Fiber
     ::taxon::V_object m_request;
 
     Remote_Request_Fiber(const shptr<Implementation>& impl,
-                         const shptr<::poseidon::WS_Server_Session>& session,
-                         const ::poseidon::UUID& request_uuid,
-                         const phcow_string& opcode, const ::taxon::V_object& request)
+          const shptr<::poseidon::WS_Server_Session>& session,
+          const ::poseidon::UUID& request_uuid,
+          const phcow_string& opcode, const ::taxon::V_object& request)
       :
         m_weak_impl(impl), m_weak_session(session), m_request_uuid(request_uuid),
         m_opcode(opcode), m_request(request)
@@ -345,9 +346,9 @@ struct Remote_Request_Fiber final : ::poseidon::Abstract_Fiber
 
 void
 do_server_ws_callback(const shptr<Implementation>& impl,
-                      const shptr<::poseidon::WS_Server_Session>& session,
-                      ::poseidon::Abstract_Fiber& /*fiber*/,
-                      ::poseidon::Easy_WS_Event event, linear_buffer&& data)
+      const shptr<::poseidon::WS_Server_Session>& session,
+      ::poseidon::Abstract_Fiber& /*fiber*/,
+      ::poseidon::Easy_WS_Event event, linear_buffer&& data)
   {
     switch(event)
       {
@@ -453,8 +454,8 @@ struct Remote_Request_Task final : ::poseidon::Abstract_Task
     ::taxon::V_object m_request;
 
     Remote_Request_Task(const shptr<::poseidon::WS_Client_Session>& session,
-                        const shptr<Service_Future>& req, const ::poseidon::UUID& request_uuid,
-                        const phcow_string& opcode, const ::taxon::V_object& request)
+          const shptr<Service_Future>& req, const ::poseidon::UUID& request_uuid,
+          const phcow_string& opcode, const ::taxon::V_object& request)
       :
         m_weak_session(session), m_weak_req(req), m_request_uuid(request_uuid),
         m_opcode(opcode), m_request(request)
@@ -481,8 +482,8 @@ struct Remote_Request_Task final : ::poseidon::Abstract_Task
 
 void
 do_subscribe_timer_callback(const shptr<Implementation>& impl,
-                            const shptr<::poseidon::Abstract_Timer>& /*timer*/,
-                            ::poseidon::Abstract_Fiber& fiber, steady_time /*now*/)
+      const shptr<::poseidon::Abstract_Timer>& /*timer*/,
+      ::poseidon::Abstract_Fiber& fiber, steady_time /*now*/)
   {
     cow_uuid_dictionary<Service_Record> remote_services;
 
@@ -566,8 +567,8 @@ do_subscribe_timer_callback(const shptr<Implementation>& impl,
 
 void
 do_publish_timer_callback(const shptr<Implementation>& impl,
-                          const shptr<::poseidon::Abstract_Timer>& timer,
-                          ::poseidon::Abstract_Fiber& fiber, steady_time now)
+      const shptr<::poseidon::Abstract_Timer>& timer,
+      ::poseidon::Abstract_Fiber& fiber, steady_time now)
   {
     if(impl->appointment.index() < 0)
       return;

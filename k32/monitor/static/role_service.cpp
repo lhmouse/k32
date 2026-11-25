@@ -124,8 +124,8 @@ do_store_role_record_into_redis(::poseidon::Abstract_Fiber& fiber, Role_Record& 
 
 void
 do_role_list(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-             const ::poseidon::UUID& /*request_service_uuid*/,
-             ::taxon::V_object& response, const ::taxon::V_object& request)
+      const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -205,8 +205,8 @@ do_role_list(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fibe
 
 void
 do_role_create(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-               const ::poseidon::UUID& /*request_service_uuid*/,
-               ::taxon::V_object& response, const ::taxon::V_object& request)
+      const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -317,8 +317,8 @@ do_role_create(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fi
 
 void
 do_role_load(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-             const ::poseidon::UUID& /*request_service_uuid*/,
-             ::taxon::V_object& response, const ::taxon::V_object& request)
+      const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -393,8 +393,7 @@ do_role_load(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fibe
 
 void
 do_store_role_record_into_mysql(::poseidon::Abstract_Fiber& fiber,
-                                uniptr<::poseidon::MySQL_Connection>&& mysql_conn_opt,
-                                Role_Record& roinfo)
+      uniptr<::poseidon::MySQL_Connection>&& mysql_conn_opt, Role_Record& roinfo)
   {
     POSEIDON_LOG_INFO(("#sav# Storing into MySQL: role `$1` (`$2`), updated on `$3`"),
                       roinfo.roid, roinfo.nickname, roinfo.update_time);
@@ -431,8 +430,8 @@ do_store_role_record_into_mysql(::poseidon::Abstract_Fiber& fiber,
 
 void
 do_role_unload(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-               const ::poseidon::UUID& /*request_service_uuid*/,
-               ::taxon::V_object& response, const ::taxon::V_object& request)
+      const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -518,8 +517,8 @@ do_role_unload(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fi
 
 void
 do_role_flush(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-              const ::poseidon::UUID& /*request_service_uuid*/,
-              ::taxon::V_object& response, const ::taxon::V_object& request)
+      const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -579,8 +578,8 @@ do_role_flush(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fib
 
 void
 do_save_timer_callback(const shptr<Implementation>& impl,
-                       const shptr<::poseidon::Abstract_Timer>& /*timer*/,
-                       ::poseidon::Abstract_Fiber& fiber, steady_time /*now*/)
+      const shptr<::poseidon::Abstract_Timer>& /*timer*/,
+      ::poseidon::Abstract_Fiber& fiber, steady_time /*now*/)
   {
     if(impl->db_ready == false) {
       // Check tables.

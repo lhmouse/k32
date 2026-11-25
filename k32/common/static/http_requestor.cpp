@@ -26,7 +26,7 @@ struct Implementation
 
 void
 do_set_single_response(const shptr<Implementation>& impl, const cow_string& default_host,
-                       ::poseidon::HTTP_S_Headers&& ht_resp, linear_buffer&& data)
+      ::poseidon::HTTP_S_Headers&& ht_resp, linear_buffer&& data)
   {
     if(ht_resp.status <= 199)
       return;
@@ -70,9 +70,9 @@ do_remove_connection(const shptr<Implementation>& impl, const cow_string& defaul
 
 void
 do_http_callback(const shptr<Implementation>& impl,
-                 const shptr<::poseidon::HTTP_Client_Session>& session,
-                 ::poseidon::Abstract_Fiber& /*fiber*/, ::poseidon::Easy_HTTP_Event event,
-                 ::poseidon::HTTP_S_Headers&& ht_resp, linear_buffer&& data)
+      const shptr<::poseidon::HTTP_Client_Session>& session,
+      ::poseidon::Abstract_Fiber& /*fiber*/, ::poseidon::Easy_HTTP_Event event,
+      ::poseidon::HTTP_S_Headers&& ht_resp, linear_buffer&& data)
   {
     switch(event)
       {
@@ -93,9 +93,9 @@ do_http_callback(const shptr<Implementation>& impl,
 
 void
 do_https_callback(const shptr<Implementation>& impl,
-                  const shptr<::poseidon::HTTPS_Client_Session>& session,
-                  ::poseidon::Abstract_Fiber& /*fiber*/, ::poseidon::Easy_HTTP_Event event,
-                  ::poseidon::HTTP_S_Headers&& ht_resp, linear_buffer&& data)
+      const shptr<::poseidon::HTTPS_Client_Session>& session,
+      ::poseidon::Abstract_Fiber& /*fiber*/, ::poseidon::Easy_HTTP_Event event,
+      ::poseidon::HTTP_S_Headers&& ht_resp, linear_buffer&& data)
   {
     switch(event)
       {

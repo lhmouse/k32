@@ -17,9 +17,10 @@ struct Implementation
   };
 
 void
-do_virtual_clock_set_offset(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
-                            const ::poseidon::UUID& /*request_service_uuid*/,
-                            ::taxon::V_object& response, const ::taxon::V_object& request)
+do_virtual_clock_set_offset(const shptr<Implementation>& impl,
+      ::poseidon::Abstract_Fiber& /*fiber*/,
+      const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //

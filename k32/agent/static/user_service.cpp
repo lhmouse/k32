@@ -126,8 +126,8 @@ do_publish_user_on_redis(::poseidon::Abstract_Fiber& fiber, const User_Record& u
   }
 
 void
-do_role_logout_common(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                      const phcow_string& username)
+do_role_logout_common(const shptr<Implementation>& impl,
+      ::poseidon::Abstract_Fiber& fiber, const phcow_string& username)
   {
     int64_t roid = impl->connections.at(username).current_roid;
     ::poseidon::UUID logic_service_uuid = impl->connections.at(username).current_logic_srv;
@@ -147,8 +147,8 @@ do_role_logout_common(const shptr<Implementation>& impl, ::poseidon::Abstract_Fi
   }
 
 void
-do_role_login_common(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                     const phcow_string& username, int64_t roid)
+do_role_login_common(const shptr<Implementation>& impl,
+      ::poseidon::Abstract_Fiber& fiber, const phcow_string& username, int64_t roid)
   {
     if(impl->connections.at(username).current_roid == roid)
       return;
@@ -186,7 +186,7 @@ do_role_login_common(const shptr<Implementation>& impl, ::poseidon::Abstract_Fib
 
 void
 do_welcome_client(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                  const phcow_string& username, const shptr<::poseidon::WS_Server_Session>& session)
+      const phcow_string& username, const shptr<::poseidon::WS_Server_Session>& session)
   {
     if(impl->connections.at(username).current_roid != 0)
       return;
@@ -258,9 +258,9 @@ do_welcome_client(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber&
 
 void
 do_server_hws_callback(const shptr<Implementation>& impl,
-                       const shptr<::poseidon::WS_Server_Session>& session,
-                       ::poseidon::Abstract_Fiber& fiber, ::poseidon::Easy_HWS_Event event,
-                       linear_buffer&& data)
+      const shptr<::poseidon::WS_Server_Session>& session,
+      ::poseidon::Abstract_Fiber& fiber,
+      ::poseidon::Easy_HWS_Event event, linear_buffer&& data)
   {
     switch(event)
       {
@@ -687,9 +687,9 @@ do_mysql_check_table_nickname(::poseidon::Abstract_Fiber& fiber)
   }
 
 void
-do_nickname_acquire(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                    const ::poseidon::UUID& /*request_service_uuid*/,
-                    ::taxon::V_object& response, const ::taxon::V_object& request)
+do_nickname_acquire(const shptr<Implementation>& impl,
+      ::poseidon::Abstract_Fiber& fiber, const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -779,9 +779,9 @@ do_nickname_acquire(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
   }
 
 void
-do_nickname_release(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                    const ::poseidon::UUID& /*request_service_uuid*/,
-                    ::taxon::V_object& response, const ::taxon::V_object& request)
+do_nickname_release(const shptr<Implementation>& impl,
+      ::poseidon::Abstract_Fiber& fiber, const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -831,8 +831,8 @@ do_nickname_release(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
 
 void
 do_ping_timer_callback(const shptr<Implementation>& impl,
-                       const shptr<::poseidon::Abstract_Timer>& /*timer*/,
-                       ::poseidon::Abstract_Fiber& fiber, steady_time now)
+      const shptr<::poseidon::Abstract_Timer>& /*timer*/,
+      ::poseidon::Abstract_Fiber& fiber, steady_time now)
   {
     if(impl->db_ready == false) {
       // Check tables.
@@ -876,8 +876,8 @@ do_ping_timer_callback(const shptr<Implementation>& impl,
 
 void
 do_check_user_timer_callback(const shptr<Implementation>& impl,
-                             const shptr<::poseidon::Abstract_Timer>& /*timer*/,
-                             ::poseidon::Abstract_Fiber& fiber, steady_time /*now*/)
+      const shptr<::poseidon::Abstract_Timer>& /*timer*/,
+      ::poseidon::Abstract_Fiber& fiber, steady_time /*now*/)
   {
     ::std::vector<phcow_string> username_list;
     username_list.reserve(impl->users.size());
@@ -897,9 +897,10 @@ do_check_user_timer_callback(const shptr<Implementation>& impl,
   }
 
 void
-do_user_kick(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
-             const ::poseidon::UUID& /*request_service_uuid*/,
-             ::taxon::V_object& response, const ::taxon::V_object& request)
+do_user_kick(const shptr<Implementation>& impl,
+      ::poseidon::Abstract_Fiber& /*fiber*/,
+      const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -949,9 +950,10 @@ do_user_kick(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fi
   }
 
 void
-do_user_check_roles(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
-                    const ::poseidon::UUID& /*request_service_uuid*/,
-                    ::taxon::V_object& response, const ::taxon::V_object& request)
+do_user_check_roles(const shptr<Implementation>& impl,
+      ::poseidon::Abstract_Fiber& /*fiber*/,
+      const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -993,9 +995,10 @@ do_user_check_roles(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
   }
 
 void
-do_user_push_message(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
-                     const ::poseidon::UUID& /*request_service_uuid*/,
-                     ::taxon::V_object& /*response*/, const ::taxon::V_object& request)
+do_user_push_message(const shptr<Implementation>& impl,
+      ::poseidon::Abstract_Fiber& /*fiber*/,
+      const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& /*response*/, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -1048,17 +1051,17 @@ do_user_push_message(const shptr<Implementation>& impl, ::poseidon::Abstract_Fib
   }
 
 void
-do_relay_deny(const shptr<Implementation>& /*impl*/, ::poseidon::Abstract_Fiber& /*fiber*/,
-              const phcow_string& /*username*/, ::taxon::V_object& response,
-              const ::taxon::V_object& /*request*/)
+do_relay_deny(const shptr<Implementation>& /*impl*/,
+      ::poseidon::Abstract_Fiber& /*fiber*/, const phcow_string& /*username*/,
+      ::taxon::V_object& response, const ::taxon::V_object& /*request*/)
   {
     response.try_emplace(&"status", &"sc_opcode_denied");
   }
 
 void
-do_relay_forward_to_logic(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                          const phcow_string& username, ::taxon::V_object& response,
-                          const ::taxon::V_object& request)
+do_relay_forward_to_logic(const shptr<Implementation>& impl,
+      ::poseidon::Abstract_Fiber& fiber, const phcow_string& username,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     ::poseidon::UUID logic_service_uuid = impl->connections.at(username).current_logic_srv;
     if(logic_service_uuid.is_nil()) {
@@ -1125,9 +1128,10 @@ do_reload_relay_conf(const shptr<Implementation>& impl)
   }
 
 void
-do_user_reload_relay_conf(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& /*fiber*/,
-                          const ::poseidon::UUID& /*request_service_uuid*/,
-                          ::taxon::V_object& response, const ::taxon::V_object& /*request*/)
+do_user_reload_relay_conf(const shptr<Implementation>& impl,
+      ::poseidon::Abstract_Fiber& /*fiber*/,
+      const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& /*request*/)
   {
     // * Request Parameters
     //
@@ -1150,8 +1154,8 @@ do_user_reload_relay_conf(const shptr<Implementation>& impl, ::poseidon::Abstrac
 
 void
 do_user_ban_set(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                const ::poseidon::UUID& /*request_service_uuid*/,
-                ::taxon::V_object& response, const ::taxon::V_object& request)
+      const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -1220,9 +1224,9 @@ do_user_ban_set(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& f
   }
 
 void
-do_user_ban_lift(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                 const ::poseidon::UUID& /*request_service_uuid*/,
-                 ::taxon::V_object& response, const ::taxon::V_object& request)
+do_user_ban_lift(const shptr<Implementation>& impl,
+      ::poseidon::Abstract_Fiber& fiber, const ::poseidon::UUID& /*request_service_uuid*/,
+      ::taxon::V_object& response, const ::taxon::V_object& request)
   {
     // * Request Parameters
     //
@@ -1276,9 +1280,9 @@ do_user_ban_lift(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& 
   }
 
 void
-do_plus_role_create(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                    const phcow_string& username, ::taxon::V_object& response,
-                    const ::taxon::V_object& request)
+do_req_role_create(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
+      const phcow_string& username, ::taxon::V_object& response,
+      const ::taxon::V_object& request)
   {
     cow_string nickname = request.at(&"nickname").as_string();
     POSEIDON_CHECK(nickname != "");
@@ -1361,9 +1365,9 @@ do_plus_role_create(const shptr<Implementation>& impl, ::poseidon::Abstract_Fibe
   }
 
 void
-do_plus_role_login(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                   const phcow_string& username, ::taxon::V_object& response,
-                   const ::taxon::V_object& request)
+do_req_role_login(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
+      const phcow_string& username, ::taxon::V_object& response,
+      const ::taxon::V_object& request)
   {
     int64_t roid = clamp_cast<int64_t>(request.at(&"roid").as_number(), -1, INT64_MAX);
     POSEIDON_CHECK((roid >= 1) && (roid <= 8'99999'99999'99999));
@@ -1394,9 +1398,9 @@ do_plus_role_login(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber
   }
 
 void
-do_plus_role_logout(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
-                    const phcow_string& username, ::taxon::V_object& response,
-                    const ::taxon::V_object& /*request*/)
+do_req_role_logout(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber& fiber,
+      const phcow_string& username, ::taxon::V_object& response,
+      const ::taxon::V_object& /*request*/)
   {
     ////////////////////////////////////////////////////////////
     //
@@ -1556,29 +1560,30 @@ reload(const ::poseidon::Config_File& conf_file)
 
     // `redis_role_ttl`
     seconds redis_role_ttl = seconds(static_cast<int>(conf_file.get_integer_opt(
-                                    &"redis_role_ttl", 600, 999999999).value_or(900)));
+            &"redis_role_ttl", 600, 999999999).value_or(900)));
 
     // `agent.client_port_list[]`
     uint16_t client_port = static_cast<uint16_t>(conf_file.get_integer(
-                        sformat("agent.client_port_list[$1]", service.service_index()), 1, 32767));
+            sformat("agent.client_port_list[$1]", service.service_index()), 1, 32767));
 
     // `agent.client_rate_limit`
     uint16_t client_rate_limit = static_cast<uint16_t>(conf_file.get_integer_opt(
-                                    &"agent.client_rate_limit", 1, 65535).value_or(10));
+            &"agent.client_rate_limit", 1, 65535).value_or(10));
 
     // `agent.client_ping_interval`
     seconds client_ping_interval = seconds(static_cast<int>(conf_file.get_integer_opt(
-                                    &"agent.client_ping_interval", 1, 3600).value_or(30)));
+            &"agent.client_ping_interval", 1, 3600).value_or(30)));
 
     // `agent.max_number_of_roles_per_user`
     uint16_t max_number_of_roles_per_user = static_cast<uint16_t>(conf_file.get_integer_opt(
-                                    &"agent.max_number_of_roles_per_user", 1, 65535).value_or(4));
+            &"agent.max_number_of_roles_per_user", 1, 65535).value_or(4));
 
     // `agent.nickname_length_limits[]`
     uint8_t nickname_length_limits_0 = static_cast<uint8_t>(conf_file.get_integer_opt(
-                                    &"agent.nickname_length_limits[0]", 1, 255).value_or(1));
+            &"agent.nickname_length_limits[0]", 1, 255).value_or(1));
+
     uint8_t nickname_length_limits_1 = static_cast<uint8_t>(conf_file.get_integer_opt(
-                                    &"agent.nickname_length_limits[1]", 1, 255).value_or(24));
+            &"agent.nickname_length_limits[1]", 1, 255).value_or(24));
 
     if(nickname_length_limits_0 > nickname_length_limits_1)
       POSEIDON_THROW((
@@ -1595,10 +1600,10 @@ reload(const ::poseidon::Config_File& conf_file)
     this->m_impl->nickname_length_limits[0] = nickname_length_limits_0;
     this->m_impl->nickname_length_limits[1] = nickname_length_limits_1;
 
-    // Set up builtin handlers.
-    this->m_impl->ws_handlers.insert_or_assign(&"req/role/create", bindw(this->m_impl, do_plus_role_create));
-    this->m_impl->ws_handlers.insert_or_assign(&"req/role/login", bindw(this->m_impl, do_plus_role_login));
-    this->m_impl->ws_handlers.insert_or_assign(&"req/role/logout", bindw(this->m_impl, do_plus_role_logout));
+    // Set up builtin handlers for clients.
+    this->m_impl->ws_handlers.insert_or_assign(&"req/role/create", bindw(this->m_impl, do_req_role_create));
+    this->m_impl->ws_handlers.insert_or_assign(&"req/role/login", bindw(this->m_impl, do_req_role_login));
+    this->m_impl->ws_handlers.insert_or_assign(&"req/role/logout", bindw(this->m_impl, do_req_role_logout));
 
     // Allow builtin handlers to be overridden; well, they may be.
     do_reload_relay_conf(this->m_impl);
