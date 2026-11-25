@@ -1104,7 +1104,7 @@ do_reload_relay_conf(const shptr<Implementation>& impl)
         continue;
 
       User_Service::ws_handler_type handler;
-      if(r.second.as_string() == "denied")
+      if(r.second.as_string() == "deny")
         handler = bindw(impl, do_relay_deny);
       else if(r.second.as_string() == "logic")
         handler = bindw(impl, do_relay_forward_to_logic);
