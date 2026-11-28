@@ -28,25 +28,25 @@ cxx_is_i386 = cxx.has_define('__i386__')
 cxx_is_amd64 = cxx.has_define('__amd64__')
 
 add_project_arguments(
-    '-Winvalid-pch', '-D_FILE_OFFSET_BITS=64', '-D_POSIX_C_SOURCE=200809',
-    '-D_XOPEN_SOURCE=700', '-D_DEFAULT_SOURCE', '-D_DARWIN_C_SOURCE',
-    '-fno-elide-constructors', '-fvisibility-inlines-hidden', '-fstrict-aliasing',
-    '-fstack-protector-strong', '-fstrict-overflow', '-fmerge-all-constants',
+    '-D_FILE_OFFSET_BITS=64', '-D_POSIX_C_SOURCE=200809', '-D_XOPEN_SOURCE=700',
+    '-fstack-protector-strong', '-fvisibility-inlines-hidden',
+    '-fstrict-aliasing', '-fstrict-overflow', '-fmerge-all-constants',
     '-frounding-math', '-fno-math-errno', '-fno-trapping-math',
     '-fno-semantic-interposition', '-fno-plt',
     '-fno-omit-frame-pointer', '-momit-leaf-frame-pointer',
     '-Werror=conversion', '-Werror=sign-compare', '-Werror=sign-conversion',
     '-Werror=write-strings', '-Werror=return-type', '-Werror=double-promotion',
-    '-Werror=non-virtual-dtor', '-Wzero-as-null-pointer-constant',
-    '-Wmissing-declarations', '-Wmissing-field-initializers', '-Wshadow',
-    '-Wswitch-enum', '-Wunused-function', '-Wunused-label', '-Wunused-local-typedefs',
-    '-Wunused-but-set-variable', '-Wunused-but-set-parameter', '-Wno-redundant-move',
-    '-Wno-missing-braces',
+    '-Werror=non-virtual-dtor',
+    '-Wzero-as-null-pointer-constant', '-Wmissing-declarations', '-Wswitch-enum',
+    '-Wmissing-field-initializers', '-Wshadow', '-Wunused-function',
+    '-Wunused-label', '-Wunused-local-typedefs', '-Wunused-but-set-variable',
+    '-Wunused-but-set-parameter',
+    '-Wno-redundant-move', '-Wno-missing-braces',
     cxx.get_supported_arguments(
-      '-masm=intel', '-mavx2', '-fno-ident', '-fno-devirtualize-speculatively',
+      '-masm=intel', '-msse4.2', '-fno-ident', '-fno-devirtualize-speculatively',
       '-fimplicit-constexpr', '-Wsuggest-attribute=noreturn', '-Wno-option-ignored',
       '-Wno-unused-command-line-argument', '-Wno-unqualified-std-cast-call',
-      '-Wno-bitwise-instead-of-logical'),
+      '-Wno-string-plus-int', '-Wno-bitwise-instead-of-logical'),
     language: 'cpp')
 
 if get_option('enable-avx2') and (cxx_is_i386 or cxx_is_amd64)
@@ -80,7 +80,7 @@ libcommon = static_library('common',
       pic: true,
       install: false)
 
-shared_module('agent',
+shared_module('k32_agent',
       cpp_pch: 'k32/xprecompiled.hpp',
       sources: [
         'k32/agent/globals.cpp',
@@ -90,7 +90,7 @@ shared_module('agent',
       link_with: libcommon,
       install: true)
 
-shared_module('monitor',
+shared_module('k32_monitor',
       cpp_pch: 'k32/xprecompiled.hpp',
       sources: [
         'k32/monitor/globals.cpp',
@@ -100,7 +100,7 @@ shared_module('monitor',
       link_with: libcommon,
       install: true)
 
-shared_module('chat',
+shared_module('k32_chat',
       cpp_pch: 'k32/xprecompiled.hpp',
       sources: [
         'k32/chat/globals.cpp',
@@ -110,7 +110,7 @@ shared_module('chat',
       link_with: libcommon,
       install: true)
 
-shared_module('logic',
+shared_module('k32_logic',
       cpp_pch: 'k32/xprecompiled.hpp',
       sources: [
         'k32/logic/globals.cpp',
