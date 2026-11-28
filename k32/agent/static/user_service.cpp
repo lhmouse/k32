@@ -61,15 +61,15 @@ struct Implementation
 phcow_string
 do_get_username(const shptr<Implementation>& impl, const shptr<::poseidon::WS_Server_Session>& sp)
   {
-    if(sp->session_user_data().is_null())
-      return phcow_string();
+    if(sp->socket_user_data().is_null())
+      return &"";
 
-    auto it = impl->connections.find(sp->session_user_data().as_string());
+    auto it = impl->connections.find(sp->socket_user_data().as_string());
     if(it == impl->connections.end())
-      return phcow_string();
+      return &"";
 
     if(sp.owner_before(it->second.weak_session) || it->second.weak_session.owner_before(sp))
-      return phcow_string();
+      return &"";
 
     return it->first;
   }
@@ -304,7 +304,7 @@ do_server_hws_callback(const shptr<Implementation>& impl,
           }
 
           POSEIDON_LOG_INFO(("Authenticated `$1` from `$2`"), uinfo.username, session->remote_address());
-          session->mut_session_user_data() = uinfo.username.rdstr();
+          session->mut_socket_user_data() = uinfo.username.rdstr();
 
           // Create the user if one doesn't exist. Ensure they can only log in
           // on a single instance.

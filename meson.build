@@ -61,47 +61,63 @@ endif
 # Modules
 #===========================================================
 
+dep_asteria = dependency('asteria')
+dep_taxon = dependency('taxon')
+
 libcommon = static_library('common',
-    cpp_pch: 'k32/xprecompiled.hpp',
-    sources: [
-      'k32/common/data/service_record.cpp', 'k32/common/data/service_response.cpp',
-      'k32/common/data/user_record.cpp', 'k32/common/data/role_record.cpp',
-      'k32/common/data/chat_thread.cpp',
-      'k32/common/fiber/service_future.cpp', 'k32/common/fiber/http_future.cpp',
-      'k32/common/static/service.cpp', 'k32/common/static/http_requestor.cpp',
-    ],
-    pic: true,
-    install: false)
+      cpp_pch: 'k32/xprecompiled.hpp',
+      sources: [
+        'k32/common/data/service_record.cpp',
+        'k32/common/data/service_response.cpp',
+        'k32/common/data/user_record.cpp',
+        'k32/common/data/role_record.cpp',
+        'k32/common/data/chat_thread.cpp',
+        'k32/common/fiber/service_future.cpp',
+        'k32/common/fiber/http_future.cpp',
+        'k32/common/static/service.cpp',
+        'k32/common/static/http_requestor.cpp'
+      ],
+      pic: true,
+      install: false)
 
-shared_module('k32_agent',
-    cpp_pch: 'k32/xprecompiled.hpp',
-    sources: [
-      'k32/agent/globals.cpp', 'k32/agent/static/user_service.cpp',
-    ],
-    link_with: libcommon,
-    install: true)
+shared_module('agent',
+      cpp_pch: 'k32/xprecompiled.hpp',
+      sources: [
+        'k32/agent/globals.cpp',
+        'k32/agent/static/user_service.cpp',
+      ],
+      dependencies: [ dep_asteria, dep_taxon ],
+      link_with: libcommon,
+      install: true)
 
-shared_module('k32_monitor',
-    cpp_pch: 'k32/xprecompiled.hpp',
-    sources: [
-      'k32/monitor/globals.cpp', 'k32/monitor/static/role_service.cpp',
-    ],
-    link_with: libcommon,
-    install: true)
+shared_module('monitor',
+      cpp_pch: 'k32/xprecompiled.hpp',
+      sources: [
+        'k32/monitor/globals.cpp',
+        'k32/monitor/static/role_service.cpp',
+      ],
+      dependencies: [ dep_asteria, dep_taxon ],
+      link_with: libcommon,
+      install: true)
 
-shared_module('k32_chat',
-    cpp_pch: 'k32/xprecompiled.hpp',
-    sources: [
-      'k32/chat/globals.cpp', 'k32/chat/static/chat_service.cpp',
-    ],
-    link_with: libcommon,
-    install: true)
+shared_module('chat',
+      cpp_pch: 'k32/xprecompiled.hpp',
+      sources: [
+        'k32/chat/globals.cpp',
+        'k32/chat/static/chat_service.cpp',
+      ],
+      dependencies: [ dep_asteria, dep_taxon ],
+      link_with: libcommon,
+      install: true)
 
-shared_module('k32_logic',
-    cpp_pch: 'k32/xprecompiled.hpp',
-    sources: [
-      'k32/logic/globals.cpp', 'k32/logic/static/virtual_clock.cpp',
-       'k32/logic/hydrated/role.cpp', 'k32/logic/static/role_service.cpp',
-    ],
-    link_with: libcommon,
-    install: true)
+shared_module('logic',
+      cpp_pch: 'k32/xprecompiled.hpp',
+      sources: [
+        'k32/logic/globals.cpp',
+        'k32/logic/static/virtual_clock.cpp',
+        'k32/logic/hydrated/role.cpp',
+        'k32/logic/static/role_service.cpp',
+      ],
+      dependencies: [ dep_asteria, dep_taxon ],
+      link_with: libcommon,
+      install: true)

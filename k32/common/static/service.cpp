@@ -58,21 +58,6 @@ struct Implementation
     ::std::vector<::poseidon::UUID> expired_remote_service_uuid_list;
   };
 
-::poseidon::UUID
-do_get_service_uuid(const ::poseidon::TCP_Socket& socket)
-  {
-    ::poseidon::UUID service_uuid;
-    if(socket.session_user_data().is_binary())
-      ::memcpy(&service_uuid, socket.session_user_data().as_binary_data(), 16);
-    return service_uuid;
-  }
-
-void
-do_set_service_uuid(::poseidon::TCP_Socket& socket, const ::poseidon::UUID& service_uuid)
-  {
-    socket.mut_session_user_data() = cow_bstring(service_uuid.data(), 16);
-  }
-
 void
 do_salt_password(char* pw, const ::poseidon::UUID& s, int64_t ts, const cow_string& password)
   {
@@ -176,8 +161,7 @@ do_client_ws_callback(const shptr<Implementation>& impl,
       case ::poseidon::easy_ws_text:
       case ::poseidon::easy_ws_binary:
         {
-          const ::poseidon::UUID remote_service_uuid = do_get_service_uuid(*session);
-          if(remote_service_uuid.is_nil())
+          if(session->socket_user_data().is_null())
             return;
 
           ::taxon::Value temp_value;
@@ -195,6 +179,7 @@ do_client_ws_callback(const shptr<Implementation>& impl,
 
           // Set the request future.
           Remote_Service_Connection_Record conn;
+          ::poseidon::UUID remote_service_uuid(session->socket_user_data().as_string());
           impl->remote_connections.find_and_copy(conn, remote_service_uuid);
 
           for(const auto& r : conn.weak_futures)
@@ -212,11 +197,11 @@ do_client_ws_callback(const shptr<Implementation>& impl,
 
       case ::poseidon::easy_ws_close:
         {
-          const ::poseidon::UUID remote_service_uuid = do_get_service_uuid(*session);
-          if(remote_service_uuid.is_nil())
+          if(session->socket_user_data().is_null())
             return;
 
           Remote_Service_Connection_Record conn;
+          ::poseidon::UUID remote_service_uuid(session->socket_user_data().as_string());
           impl->remote_connections.find_and_erase(conn, remote_service_uuid);
 
           for(const auto& r : conn.weak_futures)
@@ -318,8 +303,7 @@ struct Remote_Request_Fiber final : ::poseidon::Abstract_Fiber
         if(!session)
           return;
 
-        const ::poseidon::UUID request_service_uuid = do_get_service_uuid(*session);
-        if(request_service_uuid.is_nil())
+        if(session->socket_user_data().is_null())
           return;
 
         ::taxon::V_object response;
@@ -332,6 +316,7 @@ struct Remote_Request_Fiber final : ::poseidon::Abstract_Fiber
           format(error_fmt, "No handler for `$1` on $2", this->m_opcode, impl->service_type);
         else
           try {
+            ::poseidon::UUID request_service_uuid(session->socket_user_data().as_string());
             handler(*this, request_service_uuid, response, this->m_request);
           }
           catch(exception& stdex) {
@@ -399,7 +384,7 @@ do_server_ws_callback(const shptr<Implementation>& impl,
             return;
           }
 
-          do_set_service_uuid(*session, request_service_uuid);
+          session->mut_socket_user_data() = request_service_uuid.to_string();
           POSEIDON_LOG_INFO(("Accepted service from `$1`: $2"), session->remote_address(), data);
           break;
         }
@@ -407,8 +392,7 @@ do_server_ws_callback(const shptr<Implementation>& impl,
       case ::poseidon::easy_ws_text:
       case ::poseidon::easy_ws_binary:
         {
-          const ::poseidon::UUID request_service_uuid = do_get_service_uuid(*session);
-          if(request_service_uuid.is_nil())
+          if(session->socket_user_data().is_null())
             return;
 
           ::taxon::Value temp_value;
@@ -435,8 +419,7 @@ do_server_ws_callback(const shptr<Implementation>& impl,
 
       case ::poseidon::easy_ws_close:
         {
-          const ::poseidon::UUID request_service_uuid = do_get_service_uuid(*session);
-          if(request_service_uuid.is_nil())
+          if(session->socket_user_data().is_null())
             return;
 
           POSEIDON_LOG_INFO(("Disconnected from `$1`: $2"), session->remote_address(), data);
@@ -907,7 +890,7 @@ launch(const shptr<Service_Future>& req)
           cow_string saddr = saddr_fmt.get_string();
           session = this->m_impl->private_client.connect(saddr, bindw(this->m_impl, do_client_ws_callback));
 
-          do_set_service_uuid(*session, resp.service_uuid);
+          session->mut_socket_user_data() = resp.service_uuid.to_string();
           conn.weak_session = session;
           POSEIDON_LOG_INFO(("Connecting to service `$1` at `$2`"), resp.service_uuid, use_addr);
         }

@@ -1,3 +1,6 @@
 [submodule "poseidon"]
 	path = poseidon
 	url = https://github.com/lhmouse/poseidon.git
+[submodule "taxon"]
+	path = taxon
+	url = https://github.com/lhmouse/taxon.git
