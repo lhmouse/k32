@@ -26,7 +26,7 @@ struct Implementation
 
 void
 do_set_single_response(const shptr<Implementation>& impl, const cow_string& default_host,
-      ::poseidon::HTTP_S_Headers&& ht_resp, linear_buffer&& data)
+      ::poseidon::HTTP_Response_Headers&& ht_resp, linear_buffer&& data)
   {
     if(ht_resp.status <= 199)
       return;
@@ -72,7 +72,7 @@ void
 do_http_callback(const shptr<Implementation>& impl,
       const shptr<::poseidon::HTTP_Client_Session>& session,
       ::poseidon::Abstract_Fiber& /*fiber*/, ::poseidon::Easy_HTTP_Event event,
-      ::poseidon::HTTP_S_Headers&& ht_resp, linear_buffer&& data)
+      ::poseidon::HTTP_Response_Headers&& ht_resp, linear_buffer&& data)
   {
     switch(event)
       {
@@ -95,7 +95,7 @@ void
 do_https_callback(const shptr<Implementation>& impl,
       const shptr<::poseidon::HTTPS_Client_Session>& session,
       ::poseidon::Abstract_Fiber& /*fiber*/, ::poseidon::Easy_HTTP_Event event,
-      ::poseidon::HTTP_S_Headers&& ht_resp, linear_buffer&& data)
+      ::poseidon::HTTP_Response_Headers&& ht_resp, linear_buffer&& data)
   {
     switch(event)
       {
@@ -186,23 +186,23 @@ enqueue_weak(const shptr<HTTP_Future>& req)
     conn.request_queue.emplace_back(req);
 
     // Send the request message.
-    ::poseidon::HTTP_C_Headers ht_req;
-    ht_req.method = ::poseidon::http_GET;
+    ::poseidon::HTTP_Request_Headers ht_req;
+    ht_req.method = ::poseidon::http_method_GET;
     ht_req.raw_path = cow_string(caddr.path);
     ht_req.raw_query = cow_string(caddr.query);
     ht_req.headers.emplace_back(&"Connection", &"keep-alive");
 
     if(!req->request_payload().empty()) {
       // Set request payload.
-      ht_req.method = ::poseidon::http_POST;
+      ht_req.method = ::poseidon::http_method_POST;
       if(!req->request_content_type().empty())
         ht_req.headers.emplace_back(&"Content-Type", req->request_content_type());
     }
 
     if(http_session)
-      http_session->http_request(move(ht_req), req->request_payload());
+      http_session->http_request(ht_req, req->request_payload());
     else
-      https_session->https_request(move(ht_req), req->request_payload());
+      https_session->https_request(ht_req, req->request_payload());
   }
 
 }  // namespace k32

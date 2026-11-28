@@ -15,10 +15,10 @@ namespace k32 {
 namespace noadl = k32;
 using namespace ::poseidon::fwd;
 
-POSEIDON_USING cow_dictionary = cow_hashmap<phcow_string, Ts..., phcow_string::hash>;
-POSEIDON_USING cow_int32_dictionary = cow_hashmap<int32_t, Ts..., ::std::hash<uint32_t>>;
-POSEIDON_USING cow_int64_dictionary = cow_hashmap<int64_t, Ts..., ::std::hash<uint64_t>>;
-POSEIDON_USING cow_uuid_dictionary = cow_hashmap<::poseidon::UUID, Ts..., ::poseidon::UUID::hash>;
+POSEIDON_USING(Ts) cow_dictionary = cow_hashmap<phcow_string, Ts..., phcow_string::hash>;
+POSEIDON_USING(Ts) cow_int32_dictionary = cow_hashmap<int32_t, Ts..., ::std::hash<uint32_t>>;
+POSEIDON_USING(Ts) cow_int64_dictionary = cow_hashmap<int64_t, Ts..., ::std::hash<uint64_t>>;
+POSEIDON_USING(Ts) cow_uuid_dictionary = cow_hashmap<::poseidon::UUID, Ts..., ::poseidon::UUID::hash>;
 
 // Private WebSocket status codes to clients
 enum User_WS_Status : uint16_t

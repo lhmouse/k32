@@ -253,7 +253,7 @@ do_welcome_client(const shptr<Implementation>& impl, ::poseidon::Abstract_Fiber&
     tx_args.try_emplace(&"avatar_list", avatar_list);
 
     auto str = ::taxon::Value(tx_args).to_string(::taxon::option_json_mode);
-    session->ws_send(::poseidon::ws_TEXT, str);
+    session->ws_send(::poseidon::ws_opcode_TEXT, str);
   }
 
 void
@@ -488,7 +488,7 @@ do_server_hws_callback(const shptr<Implementation>& impl,
           temp_value = response;
 
           auto str = temp_value.to_string(::taxon::option_json_mode);
-          session->ws_send(::poseidon::ws_TEXT, str);
+          session->ws_send(::poseidon::ws_opcode_TEXT, str);
           break;
         }
 
@@ -548,6 +548,9 @@ do_server_hws_callback(const shptr<Implementation>& impl,
       case ::poseidon::easy_hws_get:
       case ::poseidon::easy_hws_head:
         {
+          ::poseidon::HTTP_Method req_method = (event == ::poseidon::easy_hws_get)
+                          ? ::poseidon::http_method_GET : ::poseidon::http_method_HEAD;
+
           ::poseidon::Network_Reference uri;
           POSEIDON_CHECK(::poseidon::parse_network_reference(uri, data) == data.size());
           phcow_string path = ::poseidon::decode_and_canonicalize_uri_path(uri.path);
@@ -577,11 +580,11 @@ do_server_hws_callback(const shptr<Implementation>& impl,
             response_content_type = &"application/octet-stream";
 
           // Make an HTTP response.
-          ::poseidon::HTTP_S_Headers resp;
+          ::poseidon::HTTP_Response_Headers resp;
           resp.status = ::poseidon::http_status_ok;
           resp.headers.emplace_back(&"Cache-Control", &"no-cache");
           resp.headers.emplace_back(&"Content-Type", response_content_type);
-          session->http_response(event == ::poseidon::easy_hws_head, move(resp), response_payload);
+          session->http_response(req_method, resp, response_payload);
           break;
         }
       }
@@ -861,7 +864,7 @@ do_ping_timer_callback(const shptr<Implementation>& impl,
       it->second.rate_counter = 0;
 
       if(now - it->second.pong_time > impl->client_ping_interval)
-        session->ws_send(::poseidon::ws_PING, "");
+        session->ws_send(::poseidon::ws_opcode_PING, "");
     }
 
     while(impl->expired_username_list.size() != 0) {
@@ -1046,7 +1049,7 @@ do_user_push_message(const shptr<Implementation>& impl,
             obj.try_emplace(&"%opcode", client_opcode);
             ::taxon::Value(obj).print_to(str, ::taxon::option_json_mode);
           }
-          session->ws_send(::poseidon::ws_TEXT, str);
+          session->ws_send(::poseidon::ws_opcode_TEXT, str);
         }
   }
 

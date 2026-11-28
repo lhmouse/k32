@@ -271,7 +271,7 @@ struct Remote_Response_Task final : ::poseidon::Abstract_Task
           this->m_response.try_emplace(&"@error", this->m_error);
 
         auto str = ::taxon::Value(this->m_response).to_string();
-        session->ws_send(::poseidon::ws_TEXT, str);
+        session->ws_send(::poseidon::ws_opcode_TEXT, str);
       }
   };
 
@@ -476,7 +476,7 @@ struct Remote_Request_Task final : ::poseidon::Abstract_Task
           this->m_request.try_emplace(&"@uuid", this->m_request_uuid.to_string());
 
         auto str = ::taxon::Value(this->m_request).to_string();
-        session->ws_send(::poseidon::ws_TEXT, str);
+        session->ws_send(::poseidon::ws_opcode_TEXT, str);
       }
   };
 
